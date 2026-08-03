@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 type Song = {
   title: string;
   artist: string;
+  genre: "华语流行" | "民谣" | "经典";
   key: string;
   bpm: number;
   level: string;
@@ -12,19 +13,30 @@ type Song = {
   chords: { name: string; notes: string[] }[];
 };
 
+const chordNotes: Record<string, string[]> = {
+  C: ["C4", "E4", "G4"], D: ["D4", "F#4", "A4"], Dm: ["D4", "F4", "A4"],
+  Em: ["E4", "G4", "B4"], E7: ["E4", "G#4", "B4", "D5"], F: ["F3", "A3", "C4"],
+  G: ["G3", "B3", "D4"], G7: ["G3", "B3", "D4", "F4"], Am: ["A3", "C4", "E4"],
+  Am7: ["A3", "C4", "E4", "G4"], Cmaj7: ["C4", "E4", "G4", "B4"],
+};
+
+const progression = (...names: string[]) => names.map(name => ({ name, notes: chordNotes[name] }));
+
 const songs: Song[] = [
-  { title: "晴天练习曲", artist: "流行入门", key: "C 大调", bpm: 76, level: "新手", color: "#d6ff62", chords: [
-    { name: "C", notes: ["C4", "E4", "G4"] }, { name: "G", notes: ["G3", "B3", "D4"] },
-    { name: "Am", notes: ["A3", "C4", "E4"] }, { name: "F", notes: ["F3", "A3", "C4"] },
-  ]},
-  { title: "夜空漫步", artist: "抒情流行", key: "G 大调", bpm: 68, level: "新手", color: "#9ee7ff", chords: [
-    { name: "G", notes: ["G3", "B3", "D4"] }, { name: "D", notes: ["D4", "F#4", "A4"] },
-    { name: "Em", notes: ["E4", "G4", "B4"] }, { name: "C", notes: ["C4", "E4", "G4"] },
-  ]},
-  { title: "橘色日落", artist: "城市民谣", key: "F 大调", bpm: 84, level: "进阶", color: "#ffb783", chords: [
-    { name: "Fmaj7", notes: ["F3", "A3", "C4", "E4"] }, { name: "C", notes: ["C4", "E4", "G4"] },
-    { name: "Dm7", notes: ["D4", "F4", "A4", "C5"] }, { name: "Bb", notes: ["A#3", "D4", "F4"] },
-  ]},
+  { title: "晴天", artist: "周杰伦", genre: "华语流行", key: "G 大调", bpm: 72, level: "新手", color: "#d6ff62", chords: progression("G", "D", "Em", "C", "G", "D", "C", "D") },
+  { title: "稻香", artist: "周杰伦", genre: "华语流行", key: "C 大调", bpm: 82, level: "新手", color: "#ffd86b", chords: progression("C", "G", "Am", "F", "C", "G", "F", "G") },
+  { title: "告白气球", artist: "周杰伦", genre: "华语流行", key: "C 大调", bpm: 84, level: "进阶", color: "#ff9ac6", chords: progression("C", "G", "Am", "Em", "F", "C", "Dm", "G") },
+  { title: "小幸运", artist: "田馥甄", genre: "华语流行", key: "G 大调", bpm: 72, level: "新手", color: "#9ee7ff", chords: progression("G", "D", "Em", "C", "G", "D", "C", "D") },
+  { title: "后来", artist: "刘若英", genre: "经典", key: "C 大调", bpm: 70, level: "新手", color: "#c7b8ff", chords: progression("C", "G", "Am", "Em", "F", "C", "Dm", "G") },
+  { title: "童话", artist: "光良", genre: "经典", key: "C 大调", bpm: 68, level: "新手", color: "#9bd8ff", chords: progression("C", "G", "Am", "Em", "F", "C", "Dm", "G") },
+  { title: "平凡之路", artist: "朴树", genre: "华语流行", key: "G 大调", bpm: 76, level: "新手", color: "#ffb783", chords: progression("Em", "C", "G", "D", "Em", "C", "G", "D") },
+  { title: "夜空中最亮的星", artist: "逃跑计划", genre: "华语流行", key: "C 大调", bpm: 74, level: "新手", color: "#6fc8ff", chords: progression("C", "G", "Am", "F", "C", "G", "F", "G") },
+  { title: "成都", artist: "赵雷", genre: "民谣", key: "C 大调", bpm: 66, level: "进阶", color: "#e8a46a", chords: progression("C", "Em", "F", "G", "C", "Am", "Dm", "G") },
+  { title: "那些年", artist: "胡夏", genre: "华语流行", key: "C 大调", bpm: 76, level: "进阶", color: "#b4e8a3", chords: progression("C", "G", "Am", "Em", "F", "C", "Dm", "G") },
+  { title: "海阔天空", artist: "Beyond", genre: "经典", key: "C 大调", bpm: 72, level: "进阶", color: "#93aaff", chords: progression("C", "G", "Am", "Em", "F", "C", "Dm", "G") },
+  { title: "月亮代表我的心", artist: "邓丽君", genre: "经典", key: "C 大调", bpm: 64, level: "新手", color: "#f6e38a", chords: progression("C", "Em", "F", "G", "C", "Am", "Dm", "G7") },
+  { title: "起风了", artist: "买辣椒也用券", genre: "华语流行", key: "C 大调", bpm: 82, level: "进阶", color: "#90dec8", chords: progression("C", "G", "Am", "Em", "F", "C", "F", "G") },
+  { title: "红豆", artist: "王菲", genre: "经典", key: "C 大调", bpm: 68, level: "进阶", color: "#e88b9c", chords: progression("F", "G", "Em", "Am", "Dm", "G", "C", "Cmaj7") },
 ];
 
 const whiteNotes = ["C3","D3","E3","F3","G3","A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"];
@@ -46,6 +58,8 @@ export default function Home() {
   const [activeNotes, setActiveNotes] = useState<string[]>([]);
   const [tempo, setTempo] = useState(songs[0].bpm);
   const [muted, setMuted] = useState(false);
+  const [genre, setGenre] = useState<"全部" | Song["genre"]>("全部");
+  const [query, setQuery] = useState("");
   const audioRef = useRef<AudioContext | null>(null);
   const song = songs[songIndex];
   const chord = song.chords[step];
@@ -91,6 +105,24 @@ export default function Home() {
   }, [playNote]);
 
   const activeSet = useMemo(() => new Set([...activeNotes, ...chord.notes]), [activeNotes, chord.notes]);
+  const visibleSongs = songs.filter(item => (genre === "全部" || item.genre === genre) && `${item.title}${item.artist}`.toLowerCase().includes(query.toLowerCase()));
+
+  const keyCenter = (note: string) => {
+    const clean = note.replace(/\d/, "");
+    const octave = Number(note.slice(-1));
+    if (!clean.includes("#")) {
+      const within = ["C", "D", "E", "F", "G", "A", "B"].indexOf(clean);
+      return ((octave - 3) * 7 + within + .5) / whiteNotes.length;
+    }
+    const base = noteSemitone[clean];
+    const boundary = (octave - 3) * 7 + (base === 1 ? 1 : base === 3 ? 2 : base === 6 ? 4 : base === 8 ? 5 : 6);
+    return boundary / whiteNotes.length;
+  };
+
+  const laneLeft = (note: string) => {
+    const ratio = keyCenter(note);
+    return `calc(${ratio * 100}% + ${18 - ratio * 36}px)`;
+  };
 
   const chooseSong = (index: number) => {
     setSongIndex(index); setStep(0); setTempo(songs[index].bpm); setPlaying(false);
@@ -107,21 +139,21 @@ export default function Home() {
       <section className="workspace">
         <aside className="song-panel">
           <div className="panel-heading"><div><span className="eyebrow">选择练习</span><h1>今天弹什么？</h1></div><button className="round-btn">＋</button></div>
-          <label className="search"><span>⌕</span><input aria-label="搜索歌曲" placeholder="搜索歌曲或艺术家" /></label>
-          <div className="filters"><button className="selected">流行</button><button>民谣</button><button>电影</button><button>爵士</button></div>
+          <label className="search"><span>⌕</span><input aria-label="搜索歌曲" placeholder="搜索歌曲或歌手" value={query} onChange={e => setQuery(e.target.value)} /></label>
+          <div className="filters">{(["全部", "华语流行", "民谣", "经典"] as const).map(item => <button key={item} className={genre === item ? "selected" : ""} onClick={() => setGenre(item)}>{item}</button>)}</div>
           <div className="song-list">
-            {songs.map((item, index) => <button key={item.title} className={`song-card ${index === songIndex ? "current" : ""}`} onClick={() => chooseSong(index)}>
+            {visibleSongs.map(item => { const index = songs.indexOf(item); return <button key={item.title} className={`song-card ${index === songIndex ? "current" : ""}`} onClick={() => chooseSong(index)}>
               <span className="cover" style={{"--cover": item.color} as React.CSSProperties}><i>♪</i></span>
               <span className="song-copy"><strong>{item.title}</strong><small>{item.artist} · {item.level}</small></span>
               <span className="song-key">{item.key.split(" ")[0]}</span>
-            </button>)}
+            </button>})}
           </div>
           <div className="daily-card"><span className="streak">◔</span><div><strong>连续练习 3 天</strong><small>再弹 8 分钟完成今日目标</small><div className="progress"><i /></div></div></div>
         </aside>
 
         <section className="stage">
           <header className="stage-header">
-            <div><span className="eyebrow">正在练习</span><h2>{song.title}</h2><p>{song.artist} <i /> {song.key} <i /> 4/4 拍</p></div>
+            <div><span className="eyebrow">正在练习 · 新手简化版</span><h2>{song.title}</h2><p>{song.artist} <i /> {song.key} <i /> 4/4 拍</p></div>
             <div className="stage-actions"><button>移调 <b>0</b></button><button>节拍器 <b>{tempo}</b></button><button className="dots">•••</button></div>
           </header>
 
@@ -133,7 +165,7 @@ export default function Home() {
             <div className="falling-zone">
               <div className="beat-grid"><i/><i/><i/><i/></div>
               <div className="now-line"><span>现在</span></div>
-              {chord.notes.map((note, i) => <div key={note} className={`falling-note n${i + 1}`} style={{ left: `${36 + i * 10}%`, animationPlayState: playing ? "running" : "paused" }}><strong>{note.replace(/\d/, "")}</strong><small>{i === 0 ? "左手" : "右手"}</small></div>)}
+              {chord.notes.map((note, i) => <div key={note} className={`falling-note n${i + 1}`} style={{ left: laneLeft(note), animationPlayState: playing ? "running" : "paused" }}><strong>{note.replace(/\d/, "")}</strong><small>{i === 0 ? "左手" : "右手"}</small></div>)}
               <div className="chord-focus"><span>当前和弦</span><strong>{chord.name}</strong><small>{chord.notes.join(" · ")}</small></div>
               <div className="next-hint">接下来 <strong>{nextChord.name}</strong></div>
             </div>
