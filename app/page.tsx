@@ -66,7 +66,7 @@ export default function Home(){
   const [playing,setPlaying]=useState(false);
   const [currentTime,setCurrentTime]=useState(0);
   const [speed,setSpeed]=useState(1);
-  const [activeNotes,setActiveNotes]=useState<number[]>([]);
+  const [activeKeys,setActiveKeys]=useState<string[]>([]);
   const [lyrics,setLyrics]=useState<string[]>([]);
   const [melodyEnabled,setMelodyEnabled]=useState(true);
   const [lyricsEnabled,setLyricsEnabled]=useState(true);
@@ -82,7 +82,7 @@ export default function Home(){
   const groupSongs=catalog.map((item,index)=>({item,index})).filter(({item})=>item.group===group);
 
   const selectSong=(index:number)=>{
-    setPlaying(false);setCurrentTime(0);setActiveNotes([]);playedRef.current.clear();setSongIndex(index);
+    setPlaying(false);setCurrentTime(0);setActiveKeys([]);playedRef.current.clear();setSongIndex(index);
   };
   const selectGroup=(next:Group)=>{
     setGroup(next);const first=catalog.findIndex(item=>item.group===next);if(first>=0)selectSong(first);
@@ -92,7 +92,7 @@ export default function Home(){
     SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
   },[]);
 
-  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6)=>{
+  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right")=>{
     const Ctx=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext;
     const ctx=audioRef.current||new Ctx(); audioRef.current=ctx;
     if(ctx.state==="suspended")await ctx.resume();
@@ -106,7 +106,8 @@ export default function Home(){
     source.buffer=buffer;source.playbackRate.value=Math.pow(2,(midi-sample)/12);
     gain.gain.setValueAtTime(Math.max(.04,.42*velocity),now);gain.gain.exponentialRampToValueAtTime(.0001,now+release);
     source.connect(gain).connect(ctx.destination);source.start(now);source.stop(now+release+.05);
-    setActiveNotes(p=>p.includes(midi)?p:[...p,midi]);window.setTimeout(()=>setActiveNotes(p=>p.filter(n=>n!==midi)),Math.min(duration,1)*800);
+    const activeKey=`${midi}-${hand}`;
+    setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800);
   },[]);
 
   useEffect(()=>{
@@ -143,8 +144,8 @@ export default function Home(){
       const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
       setCurrentTime(next);
       const scheduleFrom=next-lastTime>.2?next-.04:lastTime-.02;
-      data.notes.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
-      if(melodyEnabled)data.melody.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
+      data.notes.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity,n.hand)}});
+      if(melodyEnabled)data.melody.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12),"right")}});
       lastTime=next;
       if(next>=data.duration)setPlaying(false);else frame=requestAnimationFrame(tick);
     };
@@ -212,7 +213,7 @@ export default function Home(){
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
-                <div className="real-piano">{whiteMidis.map(m=><button key={m} className={activeNotes.includes(m)?"lit":""} onPointerDown={()=>playTone(m)}><span>{activeNotes.includes(m)?midiName(m).replace(/\d/,""):""}</span></button>)}{blackMidis.map(m=><button key={m} className={`black ${activeNotes.includes(m)?"lit":""}`} style={{left:`calc(${keyX(m)*100}% - 7px)`}} onPointerDown={()=>playTone(m)}><span>{activeNotes.includes(m)?midiName(m).replace(/\d/,""):""}</span></button>)}</div>
+                <div className="real-piano">{whiteMidis.map(m=>{const hand=activeKeys.includes(`${m}-right`)?"right":activeKeys.includes(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=activeKeys.includes(`${m}-right`)?"right":activeKeys.includes(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`calc(${keyX(m)*100}% - 7px)`}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
               </div>
             </div>
           </div>
