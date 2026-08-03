@@ -3,20 +3,35 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Midi } from "@tonejs/midi";
 
-type CatalogSong = { id:string; title:string; artist:string; tone:string; color:string };
+type Group = "pop"|"beginner"|"classical";
+type CatalogSong = { id:string; title:string; artist:string; tone:string; color:string; group:Group; source:"pop909"|"midi"|"lesson"; midi?:string; lesson?:number[] };
 type PianoNote = { midi:number; name:string; time:number; duration:number; velocity:number; hand:"left"|"right" };
 type ChordMark = { start:number; end:number; name:string };
 type SongData = { duration:number; bpm:number; notes:PianoNote[]; melody:PianoNote[]; chords:ChordMark[] };
 
 const catalog:CatalogSong[] = [
-  {id:"516",title:"晴天",artist:"周杰伦",tone:"G",color:"#d8ff62"},
-  {id:"330",title:"小幸运",artist:"田馥甄",tone:"G",color:"#8ee8ff"},
-  {id:"346",title:"平凡之路",artist:"朴树",tone:"A",color:"#f0ad73"},
-  {id:"274",title:"夜空中最亮的星",artist:"逃跑计划",tone:"B",color:"#73b8ff"},
-  {id:"412",title:"成都",artist:"赵雷",tone:"C",color:"#e79a65"},
-  {id:"714",title:"红豆",artist:"王菲",tone:"F",color:"#eb88a9"},
-  {id:"823",title:"那些年",artist:"胡夏",tone:"G",color:"#a4df8d"},
-  {id:"526",title:"月亮代表我的心",artist:"张国荣",tone:"C",color:"#f1dc7d"},
+  {id:"516",title:"晴天",artist:"周杰伦",tone:"G",color:"#d8ff62",group:"pop",source:"pop909"},
+  {id:"330",title:"小幸运",artist:"田馥甄",tone:"G",color:"#8ee8ff",group:"pop",source:"pop909"},
+  {id:"346",title:"平凡之路",artist:"朴树",tone:"A",color:"#f0ad73",group:"pop",source:"pop909"},
+  {id:"274",title:"夜空中最亮的星",artist:"逃跑计划",tone:"B",color:"#73b8ff",group:"pop",source:"pop909"},
+  {id:"412",title:"成都",artist:"赵雷",tone:"C",color:"#e79a65",group:"pop",source:"pop909"},
+  {id:"714",title:"红豆",artist:"王菲",tone:"F",color:"#eb88a9",group:"pop",source:"pop909"},
+  {id:"823",title:"那些年",artist:"胡夏",tone:"G",color:"#a4df8d",group:"pop",source:"pop909"},
+  {id:"526",title:"月亮代表我的心",artist:"张国荣",tone:"C",color:"#f1dc7d",group:"pop",source:"pop909"},
+  {id:"029",title:"一直很安静",artist:"阿桑",tone:"C",color:"#af9cff",group:"pop",source:"pop909"},
+  {id:"035",title:"七里香",artist:"刘瑞琦",tone:"E",color:"#f1a67c",group:"pop",source:"pop909"},
+  {id:"074",title:"东风破",artist:"周杰伦",tone:"D",color:"#c6a26e",group:"pop",source:"pop909"},
+  {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"C",color:"#e88ca6",group:"pop",source:"pop909"},
+  {id:"170",title:"光年之外",artist:"邓紫棋",tone:"B",color:"#809dff",group:"pop",source:"pop909"},
+  {id:"210",title:"勇气",artist:"梁静茹",tone:"C",color:"#f3c86c",group:"pop",source:"pop909"},
+  {id:"220",title:"十年",artist:"陈奕迅",tone:"F",color:"#7dd4c4",group:"pop",source:"pop909"},
+  {id:"lesson-keys",title:"认识中央 C",artist:"第 1 课 · 键盘定位",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,65,64,62,60]},
+  {id:"lesson-five",title:"右手五指练习",artist:"第 2 课 · C–G",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,67,65,64,62,60]},
+  {id:"lesson-chords",title:"三个基础和弦",artist:"第 3 课 · C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
+  {id:"lesson-hands",title:"双手协调入门",artist:"第 4 课 · 固定低音",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lesson:[48,60,52,62,55,64,53,65,55,67,48,60]},
+  {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
+  {id:"classical-elise",title:"致爱丽丝",artist:"贝多芬 · WoO 59",tone:"A",color:"#a8a3ff",group:"classical",source:"midi",midi:"/data/classical/fur-elise.mid"},
+  {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545 第一乐章",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
 ];
 
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -38,6 +53,7 @@ const chordLabel=(raw:string)=>raw==="N"?"—":raw.replace(":maj","").replace(":
 
 export default function Home(){
   const [songIndex,setSongIndex]=useState(0);
+  const [group,setGroup]=useState<Group>("pop");
   const [data,setData]=useState<SongData|null>(null);
   const [loading,setLoading]=useState(true);
   const [playing,setPlaying]=useState(false);
@@ -56,6 +72,14 @@ export default function Home(){
   const hiddenAtRef=useRef<number|null>(null);
   const playedRef=useRef(new Set<string>());
   const song=catalog[songIndex];
+  const groupSongs=catalog.map((item,index)=>({item,index})).filter(({item})=>item.group===group);
+
+  const selectSong=(index:number)=>{
+    setPlaying(false);setCurrentTime(0);setActiveNotes([]);playedRef.current.clear();setSongIndex(index);
+  };
+  const selectGroup=(next:Group)=>{
+    setGroup(next);const first=catalog.findIndex(item=>item.group===next);if(first>=0)selectSong(first);
+  };
 
   useEffect(()=>{
     SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
@@ -82,14 +106,23 @@ export default function Home(){
     let cancelled=false;
     async function load(){
       setLoading(true);setPlaying(false);setCurrentTime(0);playedRef.current.clear();
+      if(song.source==="lesson"){
+        const sequence=song.lesson??[];
+        const notes:PianoNote[]=sequence.map((midi,index)=>({midi,name:midiName(midi),time:index*.72,duration:.56,velocity:.72,hand:midi<60?"left":"right"}));
+        const chordNames=song.id==="lesson-chords"?["C","F","G","C"]:[];
+        const chords=chordNames.map((name,index)=>({start:index*2.16,end:(index+1)*2.16,name}));
+        if(!cancelled)setData({duration:Math.max(6,sequence.length*.72+.8),bpm:84,notes,melody:[],chords});
+        if(!cancelled)setLoading(false);return;
+      }
       const base=`/data/pop909/${song.id}`;
-      const [buffer,chordText]=await Promise.all([fetch(`${base}/${song.id}.mid`).then(r=>r.arrayBuffer()),fetch(`${base}/chord_midi.txt`).then(r=>r.text())]);
+      const [buffer,chordText]=await Promise.all([fetch(song.source==="midi"?song.midi!:`${base}/${song.id}.mid`).then(r=>r.arrayBuffer()),song.source==="pop909"?fetch(`${base}/chord_midi.txt`).then(r=>r.text()):Promise.resolve("")]);
       const midi=new Midi(buffer);
-      const piano=midi.tracks.find(t=>t.name.toUpperCase()==="PIANO")??midi.tracks.at(-1);
+      const piano=midi.tracks.find(t=>t.name.toUpperCase()==="PIANO")??midi.tracks.at(-1)!;
       const melody=midi.tracks.find(t=>t.name.toUpperCase()==="MELODY");
       const mapNotes=(notes:typeof piano.notes):PianoNote[]=>notes.filter(n=>n.midi>=MIN_MIDI&&n.midi<=MAX_MIDI).map(n=>({midi:n.midi,name:n.name,time:n.time,duration:n.duration,velocity:n.velocity,hand:n.midi<60?"left":"right"}));
-      const chords=chordText.trim().split(/\r?\n/).map(line=>{const [start,end,name]=line.split(/\s+/);return{start:Number(start),end:Number(end),name};});
-      if(!cancelled)setData({duration:midi.duration,bpm:midi.header.tempos[0]?.bpm??72,notes:mapNotes(piano?.notes??[]),melody:mapNotes(melody?.notes??[]),chords});
+      const chords=chordText.trim()?chordText.trim().split(/\r?\n/).map(line=>{const [start,end,name]=line.split(/\s+/);return{start:Number(start),end:Number(end),name};}):[];
+      const pianoNotes=song.source==="midi"?midi.tracks.flatMap(t=>mapNotes(t.notes)).sort((a,b)=>a.time-b.time):mapNotes(piano?.notes??[]);
+      if(!cancelled)setData({duration:midi.duration,bpm:midi.header.tempos[0]?.bpm??72,notes:pianoNotes,melody:song.source==="midi"?[]:mapNotes(melody?.notes??[]),chords});
       if(!cancelled)setLoading(false);
     }
     load();return()=>{cancelled=true};
@@ -139,8 +172,9 @@ export default function Home(){
     <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div><div className="source-badge"><span/>POP909 实谱数据</div></header>
     <div className="cf-layout">
       <aside className="library">
-        <div className="library-title"><span>专业钢琴数据集</span><h1>选择一首歌</h1><p>8 首真实 MIDI 编配 · 非猜测和弦</p></div>
-        <div className="song-list">{catalog.map((item,index)=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>setSongIndex(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
+        <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"从零开始":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"4 节循序渐进基础课":"公共领域与开放许可曲目"}</p></div>
+        <div className="library-groups"><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>零基础</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
+        <div className="song-list">{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
         <div className="data-credit"><strong>数据与音源</strong><p>POP909 Dataset · ISMIR 2020</p><small>钢琴音色：Salamander Grand Piano V3，Alexander Holm，CC BY 3.0。</small></div>
       </aside>
 
@@ -176,7 +210,7 @@ export default function Home(){
             </div>
           </div>
 
-          <div className="transport-new"><div className="time"><b>{fmt(currentTime)}</b><span>/ {data?fmt(data.duration):"--:--"}</span></div><input className="timeline" aria-label="歌曲进度" type="range" min="0" max={data?.duration??1} step=".05" value={currentTime} onChange={e=>seek(Number(e.target.value))}/><div className="controls"><button onClick={()=>seek(currentTime-5)}>−5</button><button className="main-play" disabled={!data} onClick={()=>setPlaying(!playing)}>{playing?"Ⅱ":"▶"}</button><button onClick={()=>seek(currentTime+5)}>+5</button></div><div className="speed-control"><span>速度</span>{[.5,.75,1,2].map(v=><button key={v} className={speed===v?"active":""} onClick={()=>{setPlaying(false);setSpeed(v)}}>{v}×</button>)}</div></div>
+          <div className="transport-new"><div className="time"><b>{fmt(currentTime)}</b><span>/ {data?fmt(data.duration):"--:--"}</span></div><input className="timeline" aria-label="歌曲进度" type="range" min="0" max={data?.duration??1} step=".05" value={currentTime} onChange={e=>seek(Number(e.target.value))}/><div className="controls"><button onClick={()=>seek(currentTime-5)}>−5</button><button className="main-play" disabled={!data} onClick={()=>setPlaying(!playing)}>{playing?"Ⅱ":"▶"}</button><button onClick={()=>seek(currentTime+5)}>+5</button></div><div className="speed-control"><span>速度</span>{[.5,.75,1,2].map(v=><button key={v} className={speed===v?"active":""} onClick={()=>setSpeed(v)}>{v}×</button>)}</div></div>
         </div>
       </section>
     </div>
