@@ -39,8 +39,8 @@ const songs: Song[] = [
   { title: "红豆", artist: "王菲", genre: "经典", key: "C 大调", bpm: 68, level: "进阶", color: "#e88b9c", chords: progression("F", "G", "Em", "Am", "Dm", "G", "C", "Cmaj7") },
 ];
 
-const whiteNotes = ["C3","D3","E3","F3","G3","A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5","F5","G5","A5","B5","C6"];
-const blackNotes = ["C#3","D#3","F#3","G#3","A#3","C#4","D#4","F#4","G#4","A#4","C#5","D#5","F#5","G#5","A#5"];
+const whiteNotes = ["C3","D3","E3","F3","G3","A3","B3","C4","D4","E4","F4","G4","A4","B4","C5","D5","E5"];
+const blackNotes = ["C#3","D#3","F#3","G#3","A#3","C#4","D#4","F#4","G#4","A#4","C#5","D#5"];
 const keyboardMap: Record<string,string> = { a:"C4", w:"C#4", s:"D4", e:"D#4", d:"E4", f:"F4", t:"F#4", g:"G4", y:"G#4", h:"A4", u:"A#4", j:"B4", k:"C5" };
 const noteSemitone: Record<string,number> = { C:0,"C#":1,D:2,"D#":3,E:4,F:5,"F#":6,G:7,"G#":8,A:9,"A#":10,B:11 };
 
@@ -156,6 +156,7 @@ export default function Home() {
             <div><span className="eyebrow">正在练习 · 新手简化版</span><h2>{song.title}</h2><p>{song.artist} <i /> {song.key} <i /> 4/4 拍</p></div>
             <div className="stage-actions"><button>移调 <b>0</b></button><button>节拍器 <b>{tempo}</b></button><button className="dots">•••</button></div>
           </header>
+          <label className="mobile-song-picker"><span>选择歌曲</span><select aria-label="选择练习歌曲" value={songIndex} onChange={e => chooseSong(Number(e.target.value))}>{songs.map((item, index) => <option key={item.title} value={index}>{item.title} · {item.artist}</option>)}</select></label>
 
           <div className="lesson-card">
             <div className="chord-strip">
