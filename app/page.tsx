@@ -129,7 +129,7 @@ export default function Home(){
               <div className="roll-and-keys">
                 <div className="piano-roll">
                   <div className="roll-grid">{whiteMidis.map(m=><i key={m} style={{left:`${keyX(m)*100}%`}}/>)}</div><div className="hit-line"><span>现在弹</span></div>
-                  {visibleNotes.map((n,i)=>{const delta=n.time-currentTime;return <div key={`${n.time}-${n.midi}-${i}`} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,bottom:`${Math.max(0,(1-delta/4.2)*100)}%`,height:`${Math.max(18,Math.min(70,n.duration*30))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleNotes.map((n,i)=>{const delta=n.time-currentTime;return <div key={`${n.time}-${n.midi}-${i}`} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(100,(1-delta/4.2)*100))}%`,height:`${Math.max(18,Math.min(70,n.duration*30))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
