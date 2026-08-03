@@ -45,6 +45,8 @@ export default function Home(){
   const [speed,setSpeed]=useState(1);
   const [activeNotes,setActiveNotes]=useState<number[]>([]);
   const [lyrics,setLyrics]=useState<string[]>([]);
+  const [melodyEnabled,setMelodyEnabled]=useState(true);
+  const [lyricsEnabled,setLyricsEnabled]=useState(true);
   const [panel,setPanel]=useState<"guide"|"data">("guide");
   const audioRef=useRef<AudioContext|null>(null);
   const sampleBytesRef=useRef(new Map<number,ArrayBuffer>());
@@ -99,15 +101,16 @@ export default function Home(){
       const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
       setCurrentTime(next);
       data.notes.filter(n=>n.time>=next-.07&&n.time<next+.05).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
+      if(melodyEnabled)data.melody.filter(n=>n.time>=next-.07&&n.time<next+.05).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
       if(next>=data.duration)setPlaying(false);
     },35);return()=>window.clearInterval(tick);
-  },[playing,data,speed,playTone]);
+  },[playing,data,speed,playTone,melodyEnabled]);
 
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
   const currentChord=data?.chords.find(c=>currentTime>=c.start&&currentTime<c.end);
   const nextChord=data?.chords.find(c=>c.start>(currentChord?.start??currentTime));
   const visibleNotes=useMemo(()=>data?.notes.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,60)??[],[data,currentTime]);
-  const melodyNow=useMemo(()=>data?.melody.filter(n=>n.time>=currentTime-.3&&n.time<=currentTime+5).slice(0,10)??[],[data,currentTime]);
+  const visibleMelody=useMemo(()=>melodyEnabled?(data?.melody.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,30)??[]):[],[data,currentTime,melodyEnabled]);
   const sections=useMemo(()=>{const d=data?.duration??240;return[{name:"前奏",at:0},{name:"主歌",at:d*.12},{name:"副歌",at:d*.34},{name:"间奏",at:d*.52},{name:"第二段",at:d*.63},{name:"尾奏",at:d*.9}]},[data]);
   const currentSection=sections.slice().reverse().find(s=>currentTime>=s.at)?.name??"前奏";
 
@@ -135,9 +138,10 @@ export default function Home(){
             <aside className="lesson-panel">
               <div className="panel-tabs"><button className={panel==="guide"?"active":""} onClick={()=>setPanel("guide")}>跟弹指引</button><button className={panel==="data"?"active":""} onClick={()=>setPanel("data")}>数据详情</button></div>
               {panel==="guide"?<>
+                <div className="track-switches"><button className={melodyEnabled?"on":""} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button><button className={lyricsEnabled?"on":""} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button></div>
                 <div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>
-                <div className="melody-preview"><span>旋律提示</span><div>{melodyNow.map((n,i)=><b key={`${n.time}-${i}`}>{n.name.replace(/\d/,"")}</b>)}</div></div>
-                <div className="lyrics-box">{lyrics.length?<><small>已导入歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨</small><strong>POP909 不包含授权歌词</strong><p>可导入你拥有使用权的 LRC 文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>
+                {melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}
+                {lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}
               </>:<div className="data-panel"><dl><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>C4 分区</dd></div></dl><p>低于 C4 的伴奏音分配给左手，高于或等于 C4 的伴奏音分配给右手。你看到的是 MIDI 中实际出现的音，而不是根据和弦名称生成的音。</p></div>}
             </aside>
 
@@ -146,6 +150,7 @@ export default function Home(){
                 <div className="piano-roll">
                   <div className="roll-grid">{whiteMidis.map(m=><i key={m} style={{left:`${keyX(m)*100}%`}}/>)}</div><div className="hit-line"><span>现在弹</span></div>
                   {visibleNotes.map((n,i)=>{const delta=n.time-currentTime;return <div key={`${n.time}-${n.midi}-${i}`} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(100,(1-delta/4.2)*100))}%`,height:`${Math.max(18,Math.min(70,n.duration*30))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleMelody.map((n,i)=>{const delta=n.time-currentTime;return <div key={`melody-${n.time}-${n.midi}-${i}`} className="midi-note melody" style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(100,(1-delta/4.2)*100))}%`,height:`${Math.max(20,Math.min(76,n.duration*34))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
