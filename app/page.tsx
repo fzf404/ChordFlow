@@ -60,6 +60,11 @@ export default function Home() {
   const [muted, setMuted] = useState(false);
   const [genre, setGenre] = useState<"全部" | Song["genre"]>("全部");
   const [query, setQuery] = useState("");
+  const [guideMode, setGuideMode] = useState<"lyrics" | "score">("lyrics");
+  const [lyrics, setLyrics] = useState<string[]>(["完整歌词需要获得使用授权", "可导入你拥有版权的 LRC 歌词文件", "跟随右侧音符与下方琴键练习"]);
+  const [lyricsFile, setLyricsFile] = useState("");
+  const [scoreFile, setScoreFile] = useState("");
+  const [scoreMeasures, setScoreMeasures] = useState<string[][]>([]);
   const audioRef = useRef<AudioContext | null>(null);
   const song = songs[songIndex];
   const chord = song.chords[step];
@@ -119,9 +124,38 @@ export default function Home() {
     return boundary / whiteNotes.length;
   };
 
-  const laneLeft = (note: string) => {
-    const ratio = keyCenter(note);
-    return `calc(${ratio * 100}% + ${18 - ratio * 36}px)`;
+  const laneLeft = (note: string) => `${keyCenter(note) * 100}%`;
+
+  const sections = [
+    { label: "前奏", range: "1–2", at: 0 }, { label: "主歌", range: "3–10", at: 1 },
+    { label: "预副歌", range: "11–14", at: 3 }, { label: "副歌", range: "15–22", at: 4 },
+    { label: "间奏", range: "23–26", at: 6 }, { label: "尾奏", range: "27–30", at: 7 },
+  ];
+  const currentSection = sections.slice().reverse().find(item => step >= item.at) ?? sections[0];
+
+  const importLyrics = async (file?: File) => {
+    if (!file) return;
+    const content = await file.text();
+    const parsed = content.split(/\r?\n/).map(line => line.replace(/^\[[^\]]+\]\s*/, "").trim()).filter(Boolean);
+    if (parsed.length) setLyrics(parsed);
+    setLyricsFile(file.name);
+    setGuideMode("lyrics");
+  };
+
+  const importScore = async (file?: File) => {
+    if (!file) return;
+    const source = await file.text();
+    const xml = new DOMParser().parseFromString(source, "text/xml");
+    const measures = Array.from(xml.querySelectorAll("measure")).slice(0, 16).map(measure => Array.from(measure.querySelectorAll("note")).map(note => {
+      if (note.querySelector("rest")) return "休";
+      const stepName = note.querySelector("pitch > step")?.textContent ?? "";
+      const alter = note.querySelector("pitch > alter")?.textContent === "1" ? "♯" : note.querySelector("pitch > alter")?.textContent === "-1" ? "♭" : "";
+      const octave = note.querySelector("pitch > octave")?.textContent ?? "";
+      return `${stepName}${alter}${octave}`;
+    }).filter(Boolean));
+    setScoreMeasures(measures.filter(measure => measure.length));
+    setScoreFile(file.name);
+    setGuideMode("score");
   };
 
   const chooseSong = (index: number) => {
@@ -159,29 +193,54 @@ export default function Home() {
           <label className="mobile-song-picker"><span>选择歌曲</span><select aria-label="选择练习歌曲" value={songIndex} onChange={e => chooseSong(Number(e.target.value))}>{songs.map((item, index) => <option key={item.title} value={index}>{item.title} · {item.artist}</option>)}</select></label>
 
           <div className="lesson-card">
+            <div className="section-timeline">
+              <span className="timeline-label">歌曲结构</span>
+              {sections.map(item => <button key={item.label} className={currentSection.label === item.label ? "active" : ""} onClick={() => { setStep(item.at); setPlaying(false); }}><strong>{item.label}</strong><small>{item.range} 小节</small></button>)}
+            </div>
             <div className="chord-strip">
               {song.chords.map((item, index) => <button key={`${item.name}-${index}`} className={index === step ? "active" : ""} onClick={() => { setStep(index); setPlaying(false); }}><span>{index === step ? "现在" : index === (step + 1) % song.chords.length ? "下一个" : `${index + 1}`}</span><strong>{item.name}</strong><small>{item.notes.map(n => n.replace(/\d/, "")).join(" · ")}</small></button>)}
             </div>
 
-            <div className="falling-zone">
-              <div className="beat-grid"><i/><i/><i/><i/></div>
-              <div className="now-line"><span>现在</span></div>
-              {chord.notes.map((note, i) => <div key={note} className={`falling-note n${i + 1}`} style={{ left: laneLeft(note), animationPlayState: playing ? "running" : "paused" }}><strong>{note.replace(/\d/, "")}</strong><small>{i === 0 ? "左手" : "右手"}</small></div>)}
-              <div className="chord-focus"><span>当前和弦</span><strong>{chord.name}</strong><small>{chord.notes.join(" · ")}</small></div>
-              <div className="next-hint">接下来 <strong>{nextChord.name}</strong></div>
-            </div>
+            <div className="practice-grid">
+              <aside className="guide-panel">
+                <div className="guide-tabs"><button className={guideMode === "lyrics" ? "active" : ""} onClick={() => setGuideMode("lyrics")}>歌词</button><button className={guideMode === "score" ? "active" : ""} onClick={() => setGuideMode("score")}>原谱</button></div>
+                <div className="section-now"><span>{currentSection.label}</span><strong>{chord.name}</strong><small>{chord.notes.join(" · ")}</small></div>
+                <div className={`lyrics-view ${guideMode === "lyrics" ? "shown" : ""}`}>
+                  <span className="line-before">{lyrics[(step - 1 + lyrics.length) % lyrics.length]}</span>
+                  <strong>{lyrics[step % lyrics.length]}</strong>
+                  <span>{lyrics[(step + 1) % lyrics.length]}</span>
+                  <label className="import-button">＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e => importLyrics(e.target.files?.[0])}/></label>
+                  {lyricsFile && <small className="file-name">已载入：{lyricsFile}</small>}
+                </div>
+                <div className={`score-view ${guideMode === "score" ? "shown" : ""}`}>
+                  {!scoreFile && <div className="score-placeholder"><div className="staff"><i/><i/><i/><i/><i/><b className="note one"/><b className="note two"/><b className="note three"/></div><strong>导入原版谱面</strong><p>支持 MusicXML；请使用已购买或拥有授权的乐谱文件。</p></div>}
+                  {scoreMeasures.length > 0 && <div className="score-render">{scoreMeasures.map((measure, index) => <div className="score-measure" key={index}><span>{index + 1}</span>{measure.map((note, noteIndex) => <b key={`${note}-${noteIndex}`}>{note}</b>)}</div>)}</div>}
+                  <label className="import-button">＋ 导入 MusicXML<input type="file" accept=".musicxml,.xml,.mxl" onChange={e => importScore(e.target.files?.[0])}/></label>
+                  {scoreFile && <small className="file-name">已载入：{scoreFile}</small>}
+                </div>
+              </aside>
 
-            <div className="transport">
-              <div className="speed"><span>慢</span><input aria-label="速度" type="range" min="50" max="120" value={tempo} onChange={e => setTempo(Number(e.target.value))}/><span>快</span></div>
-              <div className="main-controls"><button aria-label="上一个和弦" onClick={() => setStep((step - 1 + song.chords.length) % song.chords.length)}>↶</button><button className="play" aria-label={playing ? "暂停" : "播放"} onClick={() => setPlaying(!playing)}>{playing ? "Ⅱ" : "▶"}</button><button aria-label="下一个和弦" onClick={() => setStep((step + 1) % song.chords.length)}>↷</button></div>
-              <button className="loop">↻ 循环</button>
-            </div>
+              <div className="instrument-column">
+                <div className="falling-zone">
+                  <div className="beat-grid"><i/><i/><i/><i/></div>
+                  <div className="now-line"><span>现在</span></div>
+                  {chord.notes.map((note, i) => <div key={note} className={`falling-note n${i + 1}`} style={{ left: laneLeft(note), animationPlayState: playing ? "running" : "paused" }}><strong>{note.replace(/\d/, "")}</strong><small>{i === 0 ? "左手" : "右手"}</small></div>)}
+                  <div className="next-hint">接下来 <strong>{nextChord.name}</strong></div>
+                </div>
 
-            <div className="piano-wrap">
-              <div className="keyboard-help"><span><i className="left-dot"/>左手</span><span><i className="right-dot"/>右手</span><small>也可以用电脑键盘 A–K 弹奏</small></div>
-              <div className="piano" role="group" aria-label="可弹奏钢琴键盘">
-                {whiteNotes.map(note => <button key={note} aria-label={`弹奏 ${note}`} onPointerDown={() => playNote(note)} className={`white-key ${activeSet.has(note) ? "lit" : ""}`}><span>{activeSet.has(note) ? note.replace(/\d/, "") : ""}</span></button>)}
-                {blackNotes.map(note => { const base = noteSemitone[note.replace(/\d/, "")]; const octave = Number(note.slice(-1)); const cIndex = (octave - 3) * 7 + ([1,3].includes(base) ? (base === 1 ? 0 : 1) : base === 6 ? 3 : base === 8 ? 4 : 5); return <button key={note} aria-label={`弹奏 ${note}`} onPointerDown={() => playNote(note)} className={`black-key ${activeSet.has(note) ? "lit" : ""}`} style={{ left: `calc(${((cIndex + 1) / whiteNotes.length) * 100}% - 14px)` }}><span>{activeSet.has(note) ? note.replace(/\d/, "") : ""}</span></button> })}
+                <div className="transport">
+                  <div className="speed"><span>慢</span><input aria-label="速度" type="range" min="50" max="120" value={tempo} onChange={e => setTempo(Number(e.target.value))}/><span>快</span></div>
+                  <div className="main-controls"><button aria-label="上一个和弦" onClick={() => setStep((step - 1 + song.chords.length) % song.chords.length)}>↶</button><button className="play" aria-label={playing ? "暂停" : "播放"} onClick={() => setPlaying(!playing)}>{playing ? "Ⅱ" : "▶"}</button><button aria-label="下一个和弦" onClick={() => setStep((step + 1) % song.chords.length)}>↷</button></div>
+                  <button className="loop">↻ 循环</button>
+                </div>
+
+                <div className="piano-wrap">
+                  <div className="keyboard-help"><span><i className="left-dot"/>左手</span><span><i className="right-dot"/>右手</span><small>音符轨道与琴键一一对应 · A–K 弹奏</small></div>
+                  <div className="piano" role="group" aria-label="可弹奏钢琴键盘">
+                    {whiteNotes.map(note => <button key={note} aria-label={`弹奏 ${note}`} onPointerDown={() => playNote(note)} className={`white-key ${activeSet.has(note) ? "lit" : ""}`}><span>{activeSet.has(note) ? note.replace(/\d/, "") : ""}</span></button>)}
+                    {blackNotes.map(note => { const base = noteSemitone[note.replace(/\d/, "")]; const octave = Number(note.slice(-1)); const cIndex = (octave - 3) * 7 + ([1,3].includes(base) ? (base === 1 ? 0 : 1) : base === 6 ? 3 : base === 8 ? 4 : 5); return <button key={note} aria-label={`弹奏 ${note}`} onPointerDown={() => playNote(note)} className={`black-key ${activeSet.has(note) ? "lit" : ""}`} style={{ left: `calc(${((cIndex + 1) / whiteNotes.length) * 100}% - 14px)` }}><span>{activeSet.has(note) ? note.replace(/\d/, "") : ""}</span></button> })}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
