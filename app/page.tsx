@@ -97,13 +97,16 @@ export default function Home(){
   useEffect(()=>{
     if(!playing||!data)return;
     startRef.current=performance.now();startTimeRef.current=currentTime;
-    const tick=window.setInterval(()=>{
+    let frame=0,lastTime=currentTime;
+    const tick=()=>{
       const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
       setCurrentTime(next);
-      data.notes.filter(n=>n.time>=next-.07&&n.time<next+.05).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
-      if(melodyEnabled)data.melody.filter(n=>n.time>=next-.07&&n.time<next+.05).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
-      if(next>=data.duration)setPlaying(false);
-    },35);return()=>window.clearInterval(tick);
+      data.notes.filter(n=>n.time>lastTime-.02&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
+      if(melodyEnabled)data.melody.filter(n=>n.time>lastTime-.02&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
+      lastTime=next;
+      if(next>=data.duration)setPlaying(false);else frame=requestAnimationFrame(tick);
+    };
+    frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
   },[playing,data,speed,playTone,melodyEnabled]);
 
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
