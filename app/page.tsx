@@ -29,7 +29,14 @@ const catalog:CatalogSong[] = [
   {id:"lesson-five",title:"右手五指练习",artist:"第 2 课 · C–G",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,67,65,64,62,60]},
   {id:"lesson-chords",title:"三个基础和弦",artist:"第 3 课 · C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
   {id:"lesson-hands",title:"双手协调入门",artist:"第 4 课 · 固定低音",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lesson:[48,60,52,62,55,64,53,65,55,67,48,60]},
+  {id:"lesson-rhythm",title:"四分与八分节奏",artist:"第 5 课 · 稳定拍点",tone:"C",color:"#ffad7b",group:"beginner",source:"lesson",lesson:[60,60,62,62,64,65,64,62,60,60,60,60]},
+  {id:"lesson-scale",title:"C 大调音阶",artist:"第 6 课 · 穿指准备",tone:"C",color:"#78d7ba",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,69,71,72,71,69,67,65,64,62,60]},
+  {id:"lesson-broken",title:"分解和弦练习",artist:"第 7 课 · C / Am / F / G",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lesson:[48,52,55,52,45,48,52,48,53,57,60,57,55,59,62,59]},
+  {id:"lesson-sight",title:"八小节视奏",artist:"第 8 课 · 综合练习",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lesson:[60,62,64,60,65,67,64,62,60,64,67,65,64,62,60,60]},
   {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
+  {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔 · Allegretto",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
+  {id:"classical-schumann",title:"旋律",artist:"舒曼 · 少年曲集 Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
+  {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"A",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},
   {id:"classical-elise",title:"致爱丽丝",artist:"贝多芬 · WoO 59",tone:"A",color:"#a8a3ff",group:"classical",source:"midi",midi:"/data/classical/fur-elise.mid"},
   {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545 第一乐章",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
 ];
@@ -52,8 +59,8 @@ const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).
 const chordLabel=(raw:string)=>raw==="N"?"—":raw.replace(":maj","").replace(":min","m").replace(":7","7");
 
 export default function Home(){
-  const [songIndex,setSongIndex]=useState(0);
-  const [group,setGroup]=useState<Group>("pop");
+  const [songIndex,setSongIndex]=useState(()=>catalog.findIndex(item=>item.group==="beginner"));
+  const [group,setGroup]=useState<Group>("beginner");
   const [data,setData]=useState<SongData|null>(null);
   const [loading,setLoading]=useState(true);
   const [playing,setPlaying]=useState(false);
@@ -172,8 +179,8 @@ export default function Home(){
     <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div><div className="source-badge"><span/>POP909 实谱数据</div></header>
     <div className="cf-layout">
       <aside className="library">
-        <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"从零开始":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"4 节循序渐进基础课":"公共领域与开放许可曲目"}</p></div>
-        <div className="library-groups"><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>零基础</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
+        <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"8 节循序渐进课程":"6 首开放许可经典曲目"}</p></div>
+        <div className="library-groups"><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>教学</button><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
         <div className="song-list">{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
         <div className="data-credit"><strong>数据与音源</strong><p>POP909 · Mutopia Project</p><small>古典 MIDI：公共领域 / CC BY-SA；钢琴音色：Salamander Grand Piano V3，CC BY 3.0。</small></div>
       </aside>
