@@ -116,7 +116,7 @@ export default function Home(){
   };
 
   return <main className="cf-app">
-    <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div><div className="source-badge"><span/>POP909 实谱数据</div><div className="top-actions"><button>使用说明</button><div className="user-dot">F</div></div></header>
+    <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div><div className="source-badge"><span/>POP909 实谱数据</div></header>
     <div className="cf-layout">
       <aside className="library">
         <div className="library-title"><span>专业钢琴数据集</span><h1>选择一首歌</h1><p>8 首真实 MIDI 编配 · 非猜测和弦</p></div>
