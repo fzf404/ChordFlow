@@ -53,6 +53,7 @@ export default function Home(){
   const sampleBuffersRef=useRef(new Map<number,AudioBuffer>());
   const startRef=useRef(0);
   const startTimeRef=useRef(0);
+  const hiddenAtRef=useRef<number|null>(null);
   const playedRef=useRef(new Set<string>());
   const song=catalog[songIndex];
 
@@ -101,13 +102,26 @@ export default function Home(){
     const tick=()=>{
       const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
       setCurrentTime(next);
-      data.notes.filter(n=>n.time>lastTime-.02&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
-      if(melodyEnabled)data.melody.filter(n=>n.time>lastTime-.02&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
+      const scheduleFrom=next-lastTime>.2?next-.04:lastTime-.02;
+      data.notes.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity)}});
+      if(melodyEnabled)data.melody.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12))}});
       lastTime=next;
       if(next>=data.duration)setPlaying(false);else frame=requestAnimationFrame(tick);
     };
     frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
   },[playing,data,speed,playTone,melodyEnabled]);
+
+  useEffect(()=>{
+    const onVisibility=()=>{
+      if(document.hidden){hiddenAtRef.current=performance.now();return}
+      if(hiddenAtRef.current!==null){
+        if(playing)startRef.current+=performance.now()-hiddenAtRef.current;
+        hiddenAtRef.current=null;
+      }
+    };
+    document.addEventListener("visibilitychange",onVisibility);
+    return()=>document.removeEventListener("visibilitychange",onVisibility);
+  },[playing]);
 
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
   const currentChord=data?.chords.find(c=>currentTime>=c.start&&currentTime<c.end);
