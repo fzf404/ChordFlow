@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      '@audio-samples/piano-mp3-velocity6':
+        specifier: ^1.0.5
+        version: 1.0.5
       '@tonejs/midi':
         specifier: ^2.0.28
         version: 2.0.28
@@ -78,6 +81,9 @@ packages:
   '@alloc/quick-lru@5.2.0':
     resolution: {integrity: sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw==}
     engines: {node: '>=10'}
+
+  '@audio-samples/piano-mp3-velocity6@1.0.5':
+    resolution: {integrity: sha512-2bCJH3XneHFiX/5chhhhUmMEFjwLmoCmvHAcd8JveZNEzPa5I+IGp73mgHmavZ3VoL1QE7mmyaaIRTtti/JXpA==}
 
   '@babel/code-frame@7.29.7':
     resolution: {integrity: sha512-Aup7aUOfpbAUg2ROOJN6Iw5f9DMBlzu0mIkm/malLQFN/YQgO48wCj0Kxa3sEHJvPVFg7siR+qRInwXd2qhQKw==}
@@ -3553,6 +3559,8 @@ packages:
 snapshots:
 
   '@alloc/quick-lru@5.2.0': {}
+
+  '@audio-samples/piano-mp3-velocity6@1.0.5': {}
 
   '@babel/code-frame@7.29.7':
     dependencies:

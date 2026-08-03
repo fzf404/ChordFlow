@@ -21,6 +21,9 @@ const catalog:CatalogSong[] = [
 
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const MIN_MIDI=36, MAX_MIDI=96;
+const SAMPLE_MIDIS=[33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
+const sampleFile=(m:number)=>`${NOTE_NAMES[m%12].replace("#","%23")}${Math.floor(m/12)-1}v6.mp3`;
+const nearestSample=(m:number)=>SAMPLE_MIDIS.reduce((best,n)=>Math.abs(n-m)<Math.abs(best-m)?n:best,SAMPLE_MIDIS[0]);
 const whiteMidis=Array.from({length:MAX_MIDI-MIN_MIDI+1},(_,i)=>MIN_MIDI+i).filter(m=>![1,3,6,8,10].includes(m%12));
 const blackMidis=Array.from({length:MAX_MIDI-MIN_MIDI+1},(_,i)=>MIN_MIDI+i).filter(m=>[1,3,6,8,10].includes(m%12));
 const midiName=(m:number)=>`${NOTE_NAMES[m%12]}${Math.floor(m/12)-1}`;
@@ -44,18 +47,31 @@ export default function Home(){
   const [lyrics,setLyrics]=useState<string[]>([]);
   const [panel,setPanel]=useState<"guide"|"data">("guide");
   const audioRef=useRef<AudioContext|null>(null);
+  const sampleBytesRef=useRef(new Map<number,ArrayBuffer>());
+  const sampleBuffersRef=useRef(new Map<number,AudioBuffer>());
   const startRef=useRef(0);
   const startTimeRef=useRef(0);
   const playedRef=useRef(new Set<string>());
   const song=catalog[songIndex];
 
-  const playTone=useCallback((midi:number,duration=.45,velocity=.6)=>{
+  useEffect(()=>{
+    SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
+  },[]);
+
+  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6)=>{
     const Ctx=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext;
     const ctx=audioRef.current||new Ctx(); audioRef.current=ctx;
-    const osc=ctx.createOscillator(),gain=ctx.createGain(),now=ctx.currentTime;
-    osc.type="triangle";osc.frequency.value=440*Math.pow(2,(midi-69)/12);
-    gain.gain.setValueAtTime(.0001,now);gain.gain.exponentialRampToValueAtTime(Math.max(.025,.13*velocity),now+.018);gain.gain.exponentialRampToValueAtTime(.0001,now+Math.min(duration,.9));
-    osc.connect(gain).connect(ctx.destination);osc.start();osc.stop(now+Math.min(duration,.9)+.04);
+    if(ctx.state==="suspended")await ctx.resume();
+    const sample=nearestSample(midi);
+    let buffer=sampleBuffersRef.current.get(sample);
+    if(!buffer){
+      const bytes=sampleBytesRef.current.get(sample)??await fetch(`/audio/piano/${sampleFile(sample)}`).then(r=>r.arrayBuffer());
+      buffer=await ctx.decodeAudioData(bytes.slice(0));sampleBuffersRef.current.set(sample,buffer);
+    }
+    const source=ctx.createBufferSource(),gain=ctx.createGain(),now=ctx.currentTime,release=Math.min(4,Math.max(1.2,duration+1.8));
+    source.buffer=buffer;source.playbackRate.value=Math.pow(2,(midi-sample)/12);
+    gain.gain.setValueAtTime(Math.max(.04,.42*velocity),now);gain.gain.exponentialRampToValueAtTime(.0001,now+release);
+    source.connect(gain).connect(ctx.destination);source.start(now);source.stop(now+release+.05);
     setActiveNotes(p=>p.includes(midi)?p:[...p,midi]);window.setTimeout(()=>setActiveNotes(p=>p.filter(n=>n!==midi)),Math.min(duration,1)*800);
   },[]);
 
@@ -105,7 +121,7 @@ export default function Home(){
       <aside className="library">
         <div className="library-title"><span>专业钢琴数据集</span><h1>选择一首歌</h1><p>8 首真实 MIDI 编配 · 非猜测和弦</p></div>
         <div className="song-list">{catalog.map((item,index)=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>setSongIndex(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
-        <div className="data-credit"><strong>数据来源</strong><p>POP909 Dataset · ISMIR 2020</p><small>旋律、钢琴伴奏、节拍与和弦均来自原始数据文件。</small></div>
+        <div className="data-credit"><strong>数据与音源</strong><p>POP909 Dataset · ISMIR 2020</p><small>钢琴音色：Salamander Grand Piano V3，Alexander Holm，CC BY 3.0。</small></div>
       </aside>
 
       <section className="studio">
@@ -138,7 +154,7 @@ export default function Home(){
             </div>
           </div>
 
-          <div className="transport-new"><div className="time"><b>{fmt(currentTime)}</b><span>/ {data?fmt(data.duration):"--:--"}</span></div><input className="timeline" aria-label="歌曲进度" type="range" min="0" max={data?.duration??1} step=".05" value={currentTime} onChange={e=>seek(Number(e.target.value))}/><div className="controls"><button onClick={()=>seek(currentTime-5)}>−5</button><button className="main-play" disabled={!data} onClick={()=>setPlaying(!playing)}>{playing?"Ⅱ":"▶"}</button><button onClick={()=>seek(currentTime+5)}>+5</button></div><div className="speed-control"><span>速度</span>{[.5,.75,1].map(v=><button key={v} className={speed===v?"active":""} onClick={()=>{setPlaying(false);setSpeed(v)}}>{v}×</button>)}</div></div>
+          <div className="transport-new"><div className="time"><b>{fmt(currentTime)}</b><span>/ {data?fmt(data.duration):"--:--"}</span></div><input className="timeline" aria-label="歌曲进度" type="range" min="0" max={data?.duration??1} step=".05" value={currentTime} onChange={e=>seek(Number(e.target.value))}/><div className="controls"><button onClick={()=>seek(currentTime-5)}>−5</button><button className="main-play" disabled={!data} onClick={()=>setPlaying(!playing)}>{playing?"Ⅱ":"▶"}</button><button onClick={()=>seek(currentTime+5)}>+5</button></div><div className="speed-control"><span>速度</span>{[.5,.75,1,2].map(v=><button key={v} className={speed===v?"active":""} onClick={()=>{setPlaying(false);setSpeed(v)}}>{v}×</button>)}</div></div>
         </div>
       </section>
     </div>
