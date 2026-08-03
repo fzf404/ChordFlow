@@ -175,7 +175,7 @@ export default function Home(){
         <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"从零开始":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"4 节循序渐进基础课":"公共领域与开放许可曲目"}</p></div>
         <div className="library-groups"><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>零基础</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
         <div className="song-list">{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
-        <div className="data-credit"><strong>数据与音源</strong><p>POP909 Dataset · ISMIR 2020</p><small>钢琴音色：Salamander Grand Piano V3，Alexander Holm，CC BY 3.0。</small></div>
+        <div className="data-credit"><strong>数据与音源</strong><p>POP909 · Mutopia Project</p><small>古典 MIDI：公共领域 / CC BY-SA；钢琴音色：Salamander Grand Piano V3，CC BY 3.0。</small></div>
       </aside>
 
       <section className="studio">
