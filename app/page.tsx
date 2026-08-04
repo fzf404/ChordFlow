@@ -99,7 +99,8 @@ export default function Home(){
     const sample=nearestSample(midi);
     let buffer=sampleBuffersRef.current.get(sample);
     if(!buffer){
-      const bytes=sampleBytesRef.current.get(sample)??await fetch(`/audio/piano/${sampleFile(sample)}`).then(r=>r.arrayBuffer());
+      const cachedBytes=sampleBytesRef.current.get(sample);
+      const bytes:ArrayBuffer=cachedBytes??await fetch(`/audio/piano/${sampleFile(sample)}`).then(r=>r.arrayBuffer());
       buffer=await ctx.decodeAudioData(bytes.slice(0));sampleBuffersRef.current.set(sample,buffer);
     }
     const source=ctx.createBufferSource(),gain=ctx.createGain(),now=ctx.currentTime,release=Math.min(4,Math.max(1.2,duration+1.8));
