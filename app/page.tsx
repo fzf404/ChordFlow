@@ -56,7 +56,19 @@ const keyX=(m:number)=>{
   return before/whiteMidis.length;
 };
 const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,"0")}`;
-const chordLabel=(raw:string)=>raw==="N"?"—":raw.replace(":maj","").replace(":min","m").replace(":7","7");
+const pitchNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
+const pitchIndex:Record<string,number>={C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,Fb:4,"E#":5,F:5,"F#":6,Gb:6,G:7,"G#":8,Ab:8,A:9,"A#":10,Bb:10,B:11,Cb:11};
+const chordLabel=(raw:string)=>{
+  if(raw==="N"||!raw)return"—";
+  const match=raw.match(/^([A-G])([#b]?):([^/]+)(?:\/(\d))?$/);
+  if(!match)return raw.replace(":maj","").replace(":min","m");
+  const [,letter,accidental,quality,inversion]=match;
+  const root=`${letter}${accidental}`,rootMidi=pitchIndex[root]??-1;
+  const suffix=quality==="maj"?"":quality==="min"?"m":quality==="min7"?"m7":quality==="maj7"?"maj7":quality;
+  if(!inversion||rootMidi<0)return`${root}${suffix}`;
+  const degree=Number(inversion),interval=degree===3?(quality.startsWith("min")?3:4):degree===5?7:degree===7?(quality==="maj7"?11:10):0;
+  return`${root}${suffix}/${pitchNames[(rootMidi+interval)%12]}`;
+};
 
 export default function Home(){
   const [songIndex,setSongIndex]=useState(()=>catalog.findIndex(item=>item.group==="beginner"));
@@ -170,15 +182,14 @@ export default function Home(){
   const nextChord=data?.chords.find(c=>c.start>(currentChord?.start??currentTime));
   const visibleNotes=useMemo(()=>data?.notes.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,60)??[],[data,currentTime]);
   const visibleMelody=useMemo(()=>melodyEnabled?(data?.melody.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,30)??[]):[],[data,currentTime,melodyEnabled]);
-  const sections=useMemo(()=>{const d=data?.duration??240;return[{name:"前奏",at:0},{name:"主歌",at:d*.12},{name:"副歌",at:d*.34},{name:"间奏",at:d*.52},{name:"第二段",at:d*.63},{name:"尾奏",at:d*.9}]},[data]);
-  const currentSection=sections.slice().reverse().find(s=>currentTime>=s.at)?.name??"前奏";
+  const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
 
   const importLrc=async(file?:File)=>{
     if(!file)return;const text=await file.text();setLyrics(text.split(/\r?\n/).map(l=>l.replace(/^\[[^\]]+\]/,"").trim()).filter(Boolean));
   };
 
   return <main className="cf-app">
-    <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div><div className="source-badge"><span/>POP909 实谱数据</div></header>
+    <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div></header>
     <div className="cf-layout">
       <aside className="library">
         <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"8 节循序渐进课程":"6 首开放许可经典曲目"}</p></div>
@@ -188,11 +199,10 @@ export default function Home(){
       </aside>
 
       <section className="studio">
-        <div className="song-head"><div><span className="kicker">现在练习 · {currentSection}</span><h2>{song.title}</h2><p>{song.artist} · {data?`${Math.round(data.bpm)} BPM`:"载入中"} · {song.tone} 调</p></div><div className="head-stats"><span><small>数据编号</small>#{song.id}</span><span><small>总时长</small>{data?fmt(data.duration):"--:--"}</span></div></div>
+        <div className="song-head"><div><span className="kicker">{song.group==="beginner"?"教学课程":song.group==="pop"?"流行练习":"古典钢琴"}</span><h2>{song.title}</h2><p>{song.artist} · {data?`${Math.round(data.bpm)} BPM`:"载入中"} · {song.tone} 调</p></div><div className="head-stats"><span><small>总时长</small>{data?fmt(data.duration):"--:--"}</span></div></div>
 
         <div className="player-card">
-          <div className="section-nav"><span>歌曲结构</span>{sections.map(s=><button key={s.name} className={currentSection===s.name?"active":""} onClick={()=>seek(s.at)}><strong>{s.name}</strong><small>{fmt(s.at)}</small></button>)}</div>
-          <div className="chord-row"><div className="current-chord"><span>当前和弦</span><strong>{chordLabel(currentChord?.name??"N")}</strong></div>{data?.chords.filter(c=>c.start>=currentTime-.1).slice(0,7).map((c,i)=><button key={`${c.start}-${i}`} className={i===0?"active":""} onClick={()=>seek(c.start)}><small>{fmt(c.start)}</small><strong>{chordLabel(c.name)}</strong></button>)}<div className="next-chord">下一个 <b>{chordLabel(nextChord?.name??"N")}</b></div></div>
+          {data?.chords.length?<div className="chord-row"><div className="current-chord"><span>当前和弦</span><strong>{chordLabel(currentChord?.name??"N")}</strong></div>{visibleChords.map((c,i)=><button key={`${c.start}-${i}`} className={c===currentChord?"active":""} onClick={()=>seek(c.start)}><small>{fmt(c.start)}</small><strong>{chordLabel(c.name)}</strong></button>)}<div className="next-chord">下一个 <b>{chordLabel(nextChord?.name??"N")}</b></div></div>:<div className="no-chords"><span>此曲没有可靠的和弦标注，因此不显示推测结果</span></div>}
 
           <div className="learn-grid">
             <aside className="lesson-panel">
