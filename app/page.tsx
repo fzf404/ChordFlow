@@ -70,6 +70,25 @@ const chordLabel=(raw:string)=>{
   return`${root}${suffix}/${pitchNames[(rootMidi+interval)%12]}`;
 };
 
+const beginnerGuides:Record<string,{goal:string;steps:string[]}>= {
+  "lesson-keys":{goal:"找到中央 C，建立键盘方向感",steps:["先观察中央 C 的位置","用右手拇指跟随下落音符","保持均匀速度完成一遍"]},
+  "lesson-five":{goal:"熟悉右手 1–5 指的自然位置",steps:["五指轻放在 C–G","手腕放松，不要抬高手指","先用 0.5×，再尝试原速"]},
+  "lesson-chords":{goal:"认识 C、F、G 三个基础和弦",steps:["先看顶部和弦名称","同时按下同色音符","留意和弦切换前的准备时间"]},
+  "lesson-hands":{goal:"建立左右手独立配合",steps:["绿色低音交给左手","蓝色高音交给右手","分手练熟后再合手"]},
+  "lesson-rhythm":{goal:"稳定四分与八分音符节拍",steps:["跟着落点保持匀速","短音不要拖长","卡顿时降到 0.75×"]},
+  "lesson-scale":{goal:"完整弹奏 C 大调音阶",steps:["右手上行提前准备穿指","下行保持指序连贯","每个音保持相同力度"]},
+  "lesson-broken":{goal:"用分解形式连接常用和弦",steps:["先记住每组四个音","手掌保持稳定移动","听清每组和弦的连接"]},
+  "lesson-sight":{goal:"完成八小节综合视奏",steps:["先看音区和节奏","不中断完成第一次","第二次再修正错音"]},
+};
+const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>= {
+  "classical-minuet":{level:"入门",focus:"舞曲节拍与乐句",steps:["先练右手旋律线","左手保持轻巧","每四小节做一次乐句呼吸"]},
+  "classical-handel":{level:"入门",focus:"清晰触键与节奏",steps:["慢速分手练习","保持每个音清楚","合手后避免左手过重"]},
+  "classical-schumann":{level:"初级",focus:"歌唱性旋律",steps:["突出右手主旋律","伴奏音量保持更轻","句尾自然放松"]},
+  "classical-arabesque":{level:"初中级",focus:"快速音型与手腕放松",steps:["分组练习连续音型","用小幅手腕动作带动","先准确再逐步提速"]},
+  "classical-elise":{level:"初中级",focus:"弱起、连奏与层次",steps:["先固定主题指法","左手分解和弦保持均匀","主题重复时控制力度变化"]},
+  "classical-k545":{level:"中级",focus:"古典奏鸣曲的均衡与颗粒感",steps:["先分别整理左右手指法","十六分音符保持均匀","合手时从 0.5× 开始"]},
+};
+
 export default function Home(){
   const [songIndex,setSongIndex]=useState(()=>catalog.findIndex(item=>item.group==="beginner"));
   const [group,setGroup]=useState<Group>("beginner");
@@ -183,6 +202,8 @@ export default function Home(){
   const visibleNotes=useMemo(()=>data?.notes.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,60)??[],[data,currentTime]);
   const visibleMelody=useMemo(()=>melodyEnabled?(data?.melody.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,30)??[]):[],[data,currentTime,melodyEnabled]);
   const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
+  const beginnerGuide=beginnerGuides[song.id];
+  const classicalGuide=classicalGuides[song.id];
 
   const importLrc=async(file?:File)=>{
     if(!file)return;const text=await file.text();setLyrics(text.split(/\r?\n/).map(l=>l.replace(/^\[[^\]]+\]/,"").trim()).filter(Boolean));
@@ -206,12 +227,11 @@ export default function Home(){
 
           <div className="learn-grid">
             <aside className="lesson-panel">
-              <div className="panel-tabs"><button className={panel==="guide"?"active":""} onClick={()=>setPanel("guide")}>跟弹指引</button><button className={panel==="data"?"active":""} onClick={()=>setPanel("data")}>数据详情</button></div>
+              <div className="panel-tabs"><button className={panel==="guide"?"active":""} onClick={()=>setPanel("guide")}>{song.group==="beginner"?"课程指导":song.group==="classical"?"练习提示":"跟弹指引"}</button><button className={panel==="data"?"active":""} onClick={()=>setPanel("data")}>数据详情</button></div>
               {panel==="guide"?<>
-                <div className="track-switches"><button className={melodyEnabled?"on":""} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button><button className={lyricsEnabled?"on":""} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button></div>
-                <div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>
-                {melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}
-                {lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}
+                {song.group==="beginner"&&beginnerGuide&&<div className="course-guide"><span className="guide-label">本课目标</span><h3>{beginnerGuide.goal}</h3><ol>{beginnerGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><div className="hand-key"><span><i className="lh"/>左手低音</span><span><i className="rh"/>右手高音</span></div></div>}
+                {song.group==="classical"&&classicalGuide&&<div className="course-guide classical-guide"><div className="piece-meta"><span><small>难度</small><b>{classicalGuide.level}</b></span><span><small>练习重点</small><b>{classicalGuide.focus}</b></span></div><ol>{classicalGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><p className="source-note">开放许可 MIDI · Mutopia Project</p></div>}
+                {song.group==="pop"&&<><div className="track-switches"><button className={melodyEnabled?"on":""} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button><button className={lyricsEnabled?"on":""} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button></div><div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>{melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}{lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}</>}
               </>:<div className="data-panel"><dl><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>C4 分区</dd></div></dl><p>低于 C4 的伴奏音分配给左手，高于或等于 C4 的伴奏音分配给右手。你看到的是 MIDI 中实际出现的音，而不是根据和弦名称生成的音。</p></div>}
             </aside>
 
