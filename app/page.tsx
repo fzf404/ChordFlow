@@ -47,7 +47,7 @@ const catalog:CatalogSong[] = [
   {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
   {id:"classical-prelude-c",title:"C 大调前奏曲",artist:"巴赫 · BWV 846",tone:"C",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/bach-prelude-c-major.mid"},
   {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
-  {id:"classical-wtc-c-minor",title:"平均律第一卷 · C 小调前奏曲",artist:"巴赫 · BWV 847",tone:"Cm",color:"#d8ba78",group:"classical",source:"midi",midi:"/data/classical/bach-wtc-c-minor-prelude.mid"},
+  {id:"classical-wtc-c-minor",title:"巴赫平均率",artist:"巴赫 · BWV 847",tone:"Cm",color:"#d8ba78",group:"classical",source:"midi",midi:"/data/classical/bach-wtc-c-minor-prelude.mid"},
   {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
   {id:"classical-schumann",title:"旋律",artist:"舒曼 · Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
   {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"A",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},

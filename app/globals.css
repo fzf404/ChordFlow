@@ -31,3 +31,22 @@
 .data-credit small{display:block;font-size:8px;line-height:1.55;color:#697169}
 .song-list button.selected,.song-list button.selected:hover{box-shadow:none}
 .piano-roll{contain:layout paint}.midi-note{transition:top 45ms linear}
+
+/* Mobile library typography and spacing */
+@media(max-width:700px){
+  .library-groups{height:31px;gap:2px}
+  .library-groups button{font-size:10px;font-weight:600;line-height:1}
+  .mobile-song-picker{height:38px;grid-template-columns:28px minmax(0,1fr) 22px 34px;gap:7px;padding:4px 7px}
+  .mobile-song-picker>i{width:28px;height:28px}
+  .mobile-song-picker span strong{font-size:11px;line-height:1.25}
+  .mobile-song-picker em{font-size:9px}
+  .mobile-song-picker>b{font-size:9px}
+  .song-list{padding:7px;gap:4px}
+  .song-list.mobile-open{gap:4px}
+  .song-list button{min-height:48px;grid-template-columns:34px minmax(0,1fr) 24px;gap:9px;padding:7px 8px;border-radius:8px}
+  .song-list button>i{width:34px;height:34px;border-radius:7px}
+  .song-list button span strong{font-size:11px;line-height:1.3}
+  .song-list button span small{font-size:8px;line-height:1.25;margin-top:2px}
+  .song-list button em{font-size:9px;text-align:right}
+  .song-list button.selected,.song-list button.selected:hover{box-shadow:none}
+}
