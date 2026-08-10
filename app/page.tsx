@@ -8,6 +8,8 @@ type CatalogSong = { id:string; title:string; artist:string; tone:string; color:
 type PianoNote = { midi:number; name:string; time:number; duration:number; velocity:number; hand:"left"|"right" };
 type ChordMark = { start:number; end:number; name:string };
 type SongData = { duration:number; bpm:number; notes:PianoNote[]; melody:PianoNote[]; chords:ChordMark[] };
+const noteIds=new WeakMap<PianoNote,string>();let nextNoteId=0;
+const noteKey=(note:PianoNote)=>{let id=noteIds.get(note);if(!id){id=`note-${nextNoteId++}`;noteIds.set(note,id)}return id};
 
 const catalog:CatalogSong[] = [
   {id:"516",title:"晴天",artist:"周杰伦",tone:"G",color:"#d8ff62",group:"pop",source:"pop909"},
@@ -68,6 +70,7 @@ const catalog:CatalogSong[] = [
 
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const MIN_MIDI=36, MAX_MIDI=96;
+const ROLL_WINDOW=4.2,ROLL_HIT=96;
 const SAMPLE_MIDIS=[33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
 const sampleFile=(m:number)=>`${NOTE_NAMES[m%12].replace("#","%23")}${Math.floor(m/12)-1}v6.mp3`;
 const nearestSample=(m:number)=>SAMPLE_MIDIS.reduce((best,n)=>Math.abs(n-m)<Math.abs(best-m)?n:best,SAMPLE_MIDIS[0]);
@@ -82,6 +85,7 @@ const keyX=(m:number)=>{
 };
 const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,"0")}`;
 const notesBetween=(notes:PianoNote[],start:number,end:number,limit:number)=>{let low=0,high=notes.length;while(low<high){const mid=(low+high)>>1;if(notes[mid].time<start)low=mid+1;else high=mid}const result:PianoNote[]=[];for(let i=low;i<notes.length&&notes[i].time<=end&&result.length<limit;i++)result.push(notes[i]);return result};
+const notesInRoll=(notes:PianoNote[],time:number,limit:number)=>notesBetween(notes,time-12,time+ROLL_WINDOW,notes.length).filter(note=>note.time+note.duration>=time-.12).slice(0,limit);
 const pitchNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const pitchIndex:Record<string,number>={C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,Fb:4,"E#":5,F:5,"F#":6,Gb:6,G:7,"G#":8,Ab:8,A:9,"A#":10,Bb:10,B:11,Cb:11};
 const chordLabel=(raw:string)=>{
@@ -216,9 +220,12 @@ export default function Home(){
       const midi=new Midi(buffer);
       const piano=midi.tracks.find(t=>t.name.toUpperCase()==="PIANO")??midi.tracks.at(-1)!;
       const melody=midi.tracks.find(t=>t.name.toUpperCase()==="MELODY");
-      const mapNotes=(notes:typeof piano.notes):PianoNote[]=>notes.filter(n=>n.midi>=MIN_MIDI&&n.midi<=MAX_MIDI).map(n=>({midi:n.midi,name:n.name,time:n.time,duration:n.duration,velocity:n.velocity,hand:n.midi<60?"left":"right"}));
+      const mapNotes=(notes:typeof piano.notes,fixedHand?:"left"|"right"):PianoNote[]=>notes.filter(n=>n.midi>=MIN_MIDI&&n.midi<=MAX_MIDI).map(n=>({midi:n.midi,name:n.name,time:n.time,duration:n.duration,velocity:n.velocity,hand:fixedHand??(n.midi<60?"left":"right")}));
       const chords=chordText.trim()?chordText.trim().split(/\r?\n/).map(line=>{const [start,end,name]=line.split(/\s+/);return{start:Number(start),end:Number(end),name};}):[];
-      const pianoNotes=song.source==="midi"?midi.tracks.flatMap(t=>mapNotes(t.notes)).sort((a,b)=>a.time-b.time):mapNotes(piano?.notes??[]);
+      const noteTracks=midi.tracks.filter(track=>track.notes.length>0);
+      const trackAverages=noteTracks.map(track=>track.notes.reduce((sum,note)=>sum+note.midi,0)/track.notes.length);
+      const handSplit=trackAverages.length>1?(Math.min(...trackAverages)+Math.max(...trackAverages))/2:60;
+      const pianoNotes=song.source==="midi"?noteTracks.flatMap((track,index)=>mapNotes(track.notes,noteTracks.length>1?(trackAverages[index]>=handSplit?"right":"left"):undefined)).sort((a,b)=>a.time-b.time):mapNotes(piano?.notes??[]);
       if(!cancelled)setData({duration:midi.duration,bpm:midi.header.tempos[0]?.bpm??72,notes:pianoNotes,melody:song.source==="midi"?[]:mapNotes(melody?.notes??[]),chords});
       if(!cancelled)setLoading(false);
     }
@@ -254,8 +261,8 @@ export default function Home(){
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
   const currentChord=data?.chords.find(c=>currentTime>=c.start&&currentTime<c.end);
   const nextChord=data?.chords.find(c=>c.start>(currentChord?.start??currentTime));
-  const visibleNotes=useMemo(()=>data?notesBetween(data.notes,currentTime-.12,currentTime+4.2,60):[],[data,currentTime]);
-  const visibleMelody=useMemo(()=>melodyEnabled&&data?notesBetween(data.melody,currentTime-.12,currentTime+4.2,30):[],[data,currentTime,melodyEnabled]);
+  const visibleNotes=useMemo(()=>data?notesInRoll(data.notes,currentTime,160):[],[data,currentTime]);
+  const visibleMelody=useMemo(()=>melodyEnabled&&data?notesInRoll(data.melody,currentTime,80):[],[data,currentTime,melodyEnabled]);
   const soundingKeys=useMemo(()=>{const keys=new Set(activeKeys);visibleNotes.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-${n.hand}`)});visibleMelody.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-right`)});return keys},[activeKeys,visibleNotes,visibleMelody,currentTime]);
   const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
   const beginnerGuide=beginnerGuides[song.id];
@@ -297,8 +304,8 @@ export default function Home(){
               <div className="roll-and-keys">
                 <div className="piano-roll">
                   <div className="roll-grid">{whiteMidis.map(m=><i key={m} style={{left:`${keyX(m)*100}%`}}/>)}</div><div className="hit-line"><span>现在弹</span></div>
-                  {visibleNotes.map((n,i)=>{const delta=n.time-currentTime;return <div key={`${n.time}-${n.midi}-${i}`} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(100,(1-delta/4.2)*100))}%`,height:`${Math.max(18,Math.min(70,n.duration*30))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
-                  {visibleMelody.map((n,i)=>{const delta=n.time-currentTime;return <div key={`melody-${n.time}-${n.midi}-${i}`} className="midi-note melody" style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(100,(1-delta/4.2)*100))}%`,height:`${Math.max(20,Math.min(76,n.duration*34))}px`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleNotes.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleMelody.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className="midi-note melody" style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
