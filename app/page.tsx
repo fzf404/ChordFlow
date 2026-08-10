@@ -276,7 +276,7 @@ export default function Home(){
     <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div></header>
     <div className="cf-layout">
       <aside className="library">
-        <div className="library-title"><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"8 节循序渐进课程":"6 首开放许可经典曲目"}</p></div>
+        <div className="library-title"><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{groupSongs.length} {group==="beginner"?"节循序渐进课程":group==="pop"?"首真实 MIDI 编配":"首开放许可经典曲目"}</p></div>
         <div className="library-groups"><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>教学</button><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
         <button className="mobile-song-picker" aria-expanded={mobileLibraryOpen} onClick={()=>setMobileLibraryOpen(open=>!open)}><i style={{"--song-color":song.color} as React.CSSProperties}>♪</i><span><small>当前{group==="beginner"?"课程":"曲目"}</small><strong>{song.title}</strong></span><em>{song.tone}</em><b>{mobileLibraryOpen?"收起":"更换"}</b></button>
         <div className={`song-list${mobileLibraryOpen?" mobile-open":""}`}>{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
