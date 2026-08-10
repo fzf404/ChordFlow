@@ -25,6 +25,7 @@ const catalog:CatalogSong[] = [
   {id:"170",title:"光年之外",artist:"邓紫棋",tone:"B",color:"#809dff",group:"pop",source:"pop909"},
   {id:"210",title:"勇气",artist:"梁静茹",tone:"C",color:"#f3c86c",group:"pop",source:"pop909"},
   {id:"220",title:"十年",artist:"陈奕迅",tone:"F",color:"#7dd4c4",group:"pop",source:"pop909"},
+  {id:"017",title:"一剪梅",artist:"费玉清",tone:"G",color:"#d7b5ff",group:"pop",source:"pop909"},
   {id:"lesson-keys",title:"认识中央 C",artist:"第 1 课 · 键盘定位",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,65,64,62,60]},
   {id:"lesson-five",title:"右手五指练习",artist:"第 2 课 · C–G",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,67,65,64,62,60]},
   {id:"lesson-chords",title:"三个基础和弦",artist:"第 3 课 · C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
@@ -33,12 +34,30 @@ const catalog:CatalogSong[] = [
   {id:"lesson-scale",title:"C 大调音阶",artist:"第 6 课 · 穿指准备",tone:"C",color:"#78d7ba",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,69,71,72,71,69,67,65,64,62,60]},
   {id:"lesson-broken",title:"分解和弦练习",artist:"第 7 课 · C / Am / F / G",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lesson:[48,52,55,52,45,48,52,48,53,57,60,57,55,59,62,59]},
   {id:"lesson-sight",title:"八小节视奏",artist:"第 8 课 · 综合练习",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lesson:[60,62,64,60,65,67,64,62,60,64,67,65,64,62,60,60]},
+  {id:"lesson-left",title:"左手五指练习",artist:"第 9 课 · C–G 低音区",tone:"C",color:"#82d8a5",group:"beginner",source:"lesson",lesson:[48,50,52,53,55,55,53,52,50,48]},
+  {id:"lesson-waltz",title:"三拍子与附点",artist:"第 10 课 · 圆舞曲律动",tone:"F",color:"#f0bc83",group:"beginner",source:"lesson",lesson:[53,60,64,53,60,65,55,62,65,53,60,64]},
+  {id:"lesson-cadence",title:"主和弦连接",artist:"第 11 课 · I–IV–V–I",tone:"C",color:"#9fc4ff",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55,60]},
+  {id:"lesson-minor",title:"A 小调音阶",artist:"第 12 课 · 自然小调",tone:"Am",color:"#c7a4ee",group:"beginner",source:"lesson",lesson:[57,59,60,62,64,65,67,69,67,65,64,62,60,59,57]},
+  {id:"lesson-shift",title:"换位与跨指",artist:"第 13 课 · 扩展音域",tone:"G",color:"#78d4d1",group:"beginner",source:"lesson",lesson:[55,57,59,60,62,64,66,67,66,64,62,60,59,57,55]},
+  {id:"lesson-arpeggio",title:"琶音基础",artist:"第 14 课 · C / G / Am / F",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lesson:[48,52,55,60,55,52,43,47,50,55,50,47,45,48,52,57,53,57,60,65]},
+  {id:"lesson-legato",title:"连奏与踏板意识",artist:"第 15 课 · 旋律呼吸",tone:"F",color:"#ef9fb4",group:"beginner",source:"lesson",lesson:[53,57,60,65,64,62,60,57,55,60,62,65,64,60,57,53]},
+  {id:"lesson-piece",title:"综合小作品",artist:"第 16 课 · 双手与和弦",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[48,60,52,64,55,67,53,65,48,60,55,64,52,62,48,60,64,67,72]},
   {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
   {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔 · Allegretto",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
   {id:"classical-schumann",title:"旋律",artist:"舒曼 · 少年曲集 Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
   {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"A",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},
   {id:"classical-elise",title:"致爱丽丝",artist:"贝多芬 · WoO 59",tone:"A",color:"#a8a3ff",group:"classical",source:"midi",midi:"/data/classical/fur-elise.mid"},
   {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545 第一乐章",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
+  {id:"classical-moonlight-1",title:"月光奏鸣曲",artist:"贝多芬 · Op.27 No.2 第一乐章",tone:"C#m",color:"#869be8",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-1.mid"},
+  {id:"classical-moonlight-2",title:"月光奏鸣曲 · 小快板",artist:"贝多芬 · Op.27 No.2 第二乐章",tone:"Db",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-2.mid"},
+  {id:"classical-moonlight-3",title:"月光奏鸣曲 · 急板",artist:"贝多芬 · Op.27 No.2 第三乐章",tone:"C#m",color:"#717fe0",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-3.mid"},
+  {id:"classical-prelude-e",title:"E 小调前奏曲",artist:"肖邦 · Op.28 No.4",tone:"Em",color:"#c899aa",group:"classical",source:"midi",midi:"/data/classical/chopin-prelude-e-minor.mid"},
+  {id:"classical-nocturne",title:"降 E 大调夜曲",artist:"肖邦 · Op.9 No.2",tone:"Eb",color:"#b5a2df",group:"classical",source:"midi",midi:"/data/classical/chopin-nocturne-op9-2.mid"},
+  {id:"classical-pathetique",title:"悲怆奏鸣曲 · 如歌的柔板",artist:"贝多芬 · Op.13 第二乐章",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
+  {id:"classical-appassionata",title:"热情奏鸣曲 · 行板",artist:"贝多芬 · Op.57 第二乐章",tone:"Db",color:"#d38d7e",group:"classical",source:"midi",midi:"/data/classical/beethoven-appassionata-2.mid"},
+  {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
+  {id:"classical-clementi",title:"C 大调小奏鸣曲",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
+  {id:"classical-funeral",title:"C 小调葬礼进行曲",artist:"莫扎特 · K.453a",tone:"Cm",color:"#9f9ca8",group:"classical",source:"midi",midi:"/data/classical/mozart-funeral-march.mid"},
 ];
 
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -79,6 +98,14 @@ const beginnerGuides:Record<string,{goal:string;steps:string[]}>= {
   "lesson-scale":{goal:"完整弹奏 C 大调音阶",steps:["右手上行提前准备穿指","下行保持指序连贯","每个音保持相同力度"]},
   "lesson-broken":{goal:"用分解形式连接常用和弦",steps:["先记住每组四个音","手掌保持稳定移动","听清每组和弦的连接"]},
   "lesson-sight":{goal:"完成八小节综合视奏",steps:["先看音区和节奏","不中断完成第一次","第二次再修正错音"]},
+  "lesson-left":{goal:"建立左手五指的独立控制",steps:["小指放在低音 C","手腕保持自然水平","先慢速上行再下行"]},
+  "lesson-waltz":{goal:"感受三拍子的强弱弱律动",steps:["第一拍稍有支撑","第二、三拍保持轻巧","边数一二三边跟弹"]},
+  "lesson-cadence":{goal:"听辨并弹奏 I–IV–V–I 终止式",steps:["分别找到三个和弦手型","观察共同音减少移动","最后的 C 和弦自然收束"]},
+  "lesson-minor":{goal:"熟悉 A 自然小调的音阶结构",steps:["从 A 音开始定位","留意全音与半音关系","上下行保持同样速度"]},
+  "lesson-shift":{goal:"通过换位扩展右手活动范围",steps:["先分组记住五指位置","移动前放松手腕","换位后快速确认拇指落点"]},
+  "lesson-arpeggio":{goal:"均匀连接四组基础琶音",steps:["每四个音看作一组","手腕顺着音型横向移动","保持每组音量一致"]},
+  "lesson-legato":{goal:"弹出连贯旋律与自然乐句",steps:["手指交接时不要留缝","句尾轻轻抬起手腕","先不用踏板练清楚连接"]},
+  "lesson-piece":{goal:"综合运用双手、和弦与旋律",steps:["先分别熟悉高低音区","按照颜色分配左右手","完整弹完后再提高速度"]},
 };
 const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>= {
   "classical-minuet":{level:"入门",focus:"舞曲节拍与乐句",steps:["先练右手旋律线","左手保持轻巧","每四小节做一次乐句呼吸"]},
@@ -87,6 +114,16 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-arabesque":{level:"初中级",focus:"快速音型与手腕放松",steps:["分组练习连续音型","用小幅手腕动作带动","先准确再逐步提速"]},
   "classical-elise":{level:"初中级",focus:"弱起、连奏与层次",steps:["先固定主题指法","左手分解和弦保持均匀","主题重复时控制力度变化"]},
   "classical-k545":{level:"中级",focus:"古典奏鸣曲的均衡与颗粒感",steps:["先分别整理左右手指法","十六分音符保持均匀","合手时从 0.5× 开始"]},
+  "classical-moonlight-1":{level:"中级",focus:"三连音织体与旋律层次",steps:["先单练持续三连音","高声部旋律保持歌唱性","用轻触键营造安静氛围"]},
+  "classical-moonlight-2":{level:"中级",focus:"轻盈舞步与声部平衡",steps:["保持小快板的弹性","左手不要压住旋律","句尾留出自然呼吸"]},
+  "classical-moonlight-3":{level:"高级",focus:"快速琶音与爆发力控制",steps:["分组练习快速音型","手臂保持放松不僵硬","从低速逐段衔接"]},
+  "classical-prelude-e":{level:"初中级",focus:"和声进行与旋律呼吸",steps:["先听清左手和声变化","右手旋律保持连贯","延长音处控制自然衰减"]},
+  "classical-nocturne":{level:"中高级",focus:"装饰音与夜曲式歌唱性",steps:["先略去装饰音理顺旋律","左手伴奏保持均匀","装饰音轻巧融入拍点"]},
+  "classical-pathetique":{level:"中级",focus:"如歌旋律与宽广伴奏",steps:["右手主题保持深连奏","左手和弦控制音量","重复乐句做出层次变化"]},
+  "classical-appassionata":{level:"中高级",focus:"变奏层次与长线条",steps:["先建立主题的平静脉搏","每次变奏逐步增强张力","低音声部保持清晰"]},
+  "classical-invention":{level:"中级",focus:"二声部独立与模仿",steps:["分别唱出两个声部","左右手都保持清楚触键","主题进入时稍作突出"]},
+  "classical-clementi":{level:"初中级",focus:"古典句法与快速音阶",steps:["划分四小节乐句","音阶指法保持稳定","伴奏轻于主旋律"]},
+  "classical-funeral":{level:"中级",focus:"进行曲脉搏与沉稳音色",steps:["保持稳定而克制的速度","和弦整齐落键","强弱变化不要突然"]},
 };
 
 export default function Home(){
@@ -211,7 +248,7 @@ export default function Home(){
         <div className="library-groups"><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>教学</button><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
         <button className="mobile-song-picker" aria-expanded={mobileLibraryOpen} onClick={()=>setMobileLibraryOpen(open=>!open)}><i style={{"--song-color":song.color} as React.CSSProperties}>♪</i><span><small>当前{group==="beginner"?"课程":"曲目"}</small><strong>{song.title}</strong></span><em>{song.tone}</em><b>{mobileLibraryOpen?"收起":"更换"}</b></button>
         <div className={`song-list${mobileLibraryOpen?" mobile-open":""}`}>{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
-        <div className="data-credit"><strong>数据来源</strong><p>POP909 · Mutopia Project</p><small>古典曲目使用开放许可 MIDI<br/>钢琴音色使用 Salamander Grand Piano</small></div>
+        <div className="data-credit"><strong>数据与音源</strong><p>POP909 · Mutopia Project</p><small>古典曲目使用开放许可 MIDI<br/>钢琴音色使用 Salamander Grand Piano</small></div>
       </aside>
 
       <section className="studio">
