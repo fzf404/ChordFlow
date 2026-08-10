@@ -11,6 +11,8 @@ type SongData = { duration:number; bpm:number; notes:PianoNote[]; melody:PianoNo
 
 const catalog:CatalogSong[] = [
   {id:"516",title:"晴天",artist:"周杰伦",tone:"G",color:"#d8ff62",group:"pop",source:"pop909"},
+  {id:"074",title:"东风破",artist:"周杰伦",tone:"D",color:"#c6a26e",group:"pop",source:"pop909"},
+  {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"C",color:"#e88ca6",group:"pop",source:"pop909"},
   {id:"330",title:"小幸运",artist:"田馥甄",tone:"G",color:"#8ee8ff",group:"pop",source:"pop909"},
   {id:"346",title:"平凡之路",artist:"朴树",tone:"A",color:"#f0ad73",group:"pop",source:"pop909"},
   {id:"274",title:"夜空中最亮的星",artist:"逃跑计划",tone:"B",color:"#73b8ff",group:"pop",source:"pop909"},
@@ -20,8 +22,6 @@ const catalog:CatalogSong[] = [
   {id:"526",title:"月亮代表我的心",artist:"张国荣",tone:"C",color:"#f1dc7d",group:"pop",source:"pop909"},
   {id:"029",title:"一直很安静",artist:"阿桑",tone:"C",color:"#af9cff",group:"pop",source:"pop909"},
   {id:"035",title:"七里香",artist:"刘瑞琦",tone:"E",color:"#f1a67c",group:"pop",source:"pop909"},
-  {id:"074",title:"东风破",artist:"周杰伦",tone:"D",color:"#c6a26e",group:"pop",source:"pop909"},
-  {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"C",color:"#e88ca6",group:"pop",source:"pop909"},
   {id:"170",title:"光年之外",artist:"邓紫棋",tone:"B",color:"#809dff",group:"pop",source:"pop909"},
   {id:"210",title:"勇气",artist:"梁静茹",tone:"C",color:"#f3c86c",group:"pop",source:"pop909"},
   {id:"220",title:"十年",artist:"陈奕迅",tone:"F",color:"#7dd4c4",group:"pop",source:"pop909"},
@@ -45,6 +45,7 @@ const catalog:CatalogSong[] = [
   {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
   {id:"classical-prelude-c",title:"C 大调前奏曲",artist:"巴赫 · BWV 846",tone:"C",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/bach-prelude-c-major.mid"},
   {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
+  {id:"classical-goldberg",title:"哥德堡变奏曲 · 咏叹调",artist:"巴赫 · BWV 988",tone:"G",color:"#d8ba78",group:"classical",source:"midi",midi:"/data/classical/bach-goldberg-aria.mid"},
   {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
   {id:"classical-schumann",title:"旋律",artist:"舒曼 · Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
   {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"A",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},
@@ -56,10 +57,12 @@ const catalog:CatalogSong[] = [
   {id:"classical-pathetique-3",title:"悲怆奏鸣曲 · 第三乐章",artist:"贝多芬 · Op.13",tone:"Cm",color:"#c88e78",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-3.mid"},
   {id:"classical-appassionata",title:"热情奏鸣曲 · 第二乐章",artist:"贝多芬 · Op.57",tone:"Db",color:"#d38d7e",group:"classical",source:"midi",midi:"/data/classical/beethoven-appassionata-2.mid"},
   {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
-  {id:"classical-turkish",title:"土耳其进行曲",artist:"莫扎特 · K.331",tone:"Am",color:"#717fe0",group:"classical",source:"midi",midi:"/data/classical/mozart-turkish-march.mid"},
   {id:"classical-funeral",title:"C 小调葬礼进行曲",artist:"莫扎特 · K.453a",tone:"Cm",color:"#9f9ca8",group:"classical",source:"midi",midi:"/data/classical/mozart-funeral-march.mid"},
   {id:"classical-prelude-e",title:"E 小调前奏曲",artist:"肖邦 · Op.28 No.4",tone:"Em",color:"#c899aa",group:"classical",source:"midi",midi:"/data/classical/chopin-prelude-e-minor.mid"},
   {id:"classical-nocturne",title:"降 E 大调夜曲",artist:"肖邦 · Op.9 No.2",tone:"Eb",color:"#b5a2df",group:"classical",source:"midi",midi:"/data/classical/chopin-nocturne-op9-2.mid"},
+  {id:"classical-schubert-impromptu",title:"降 G 大调即兴曲",artist:"舒伯特 · Op.90 No.3",tone:"Gb",color:"#9eb2d8",group:"classical",source:"midi",midi:"/data/classical/schubert-impromptu-op90-3.mid"},
+  {id:"classical-brahms-waltz",title:"降 A 大调圆舞曲",artist:"勃拉姆斯 · Op.39 No.15",tone:"Ab",color:"#d8a9b2",group:"classical",source:"midi",midi:"/data/classical/brahms-waltz-op39-15.mid"},
+  {id:"classical-clair-de-lune",title:"月光",artist:"德彪西 · 贝加马斯克组曲",tone:"Db",color:"#88aee0",group:"classical",source:"midi",midi:"/data/classical/debussy-clair-de-lune.mid"},
   {id:"classical-clementi",title:"C 大调小奏鸣曲",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
 ];
 
@@ -121,7 +124,7 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-moonlight-2":{level:"中级",focus:"轻盈节拍与声部平衡",steps:["保持节拍自然流动","左手不要压住旋律","句尾留出清楚呼吸"]},
   "classical-moonlight-3":{level:"高级",focus:"快速琶音与力度控制",steps:["分组练习快速音型","保持手臂与手腕放松","从低速逐段衔接"]},
   "classical-prelude-c":{level:"初中级",focus:"分解和弦与和声流动",steps:["按和声位置分组练习","每组音型保持均匀","低音变化时提前准备手位"]},
-  "classical-turkish":{level:"中高级",focus:"快速音型与清晰触键",steps:["先分组练习主题音型","保持手腕轻巧放松","从低速逐段连接"]},
+  "classical-goldberg":{level:"中级",focus:"装饰音与复调层次",steps:["先弹清楚主题骨架","装饰音保持轻巧自然","低声部线条不要被覆盖"]},
   "classical-prelude-e":{level:"初中级",focus:"和声进行与旋律呼吸",steps:["先听清左手和声变化","右手旋律保持连贯","延长音处控制自然衰减"]},
   "classical-nocturne":{level:"中高级",focus:"装饰音与夜曲式歌唱性",steps:["先略去装饰音理顺旋律","左手伴奏保持均匀","装饰音轻巧融入拍点"]},
   "classical-pathetique-1":{level:"高级",focus:"强烈对比与快速音型",steps:["分别练习慢速引子与主题","和弦整齐有支撑","快速段落从分组慢练开始"]},
@@ -131,6 +134,9 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-invention":{level:"中级",focus:"二声部独立与模仿",steps:["分别唱出两个声部","左右手都保持清楚触键","主题进入时稍作突出"]},
   "classical-clementi":{level:"初中级",focus:"古典句法与快速音阶",steps:["划分四小节乐句","音阶指法保持稳定","伴奏轻于主旋律"]},
   "classical-funeral":{level:"中级",focus:"进行曲脉搏与沉稳音色",steps:["保持稳定而克制的速度","和弦整齐落键","强弱变化不要突然"]},
+  "classical-schubert-impromptu":{level:"高级",focus:"长线条与连续音型",steps:["先分层练习旋律与伴奏","连续音型保持均匀放松","用和声变化推动乐句"]},
+  "classical-brahms-waltz":{level:"中级",focus:"圆舞曲律动与内声部",steps:["保持三拍子的自然摆动","旋律高于伴奏声部","句尾做出柔和收束"]},
+  "classical-clair-de-lune":{level:"高级",focus:"音色层次与自由呼吸",steps:["先确定旋律声部走向","和弦保持柔和透明","速度变化服从乐句呼吸"]},
 };
 
 export default function Home(){
