@@ -30,3 +30,4 @@
 .data-credit p{font-size:9px;line-height:1.35;margin:5px 0 7px;color:#9ba39c}
 .data-credit small{display:block;font-size:8px;line-height:1.55;color:#697169}
 .song-list button.selected,.song-list button.selected:hover{box-shadow:none}
+.piano-roll{contain:layout paint}.midi-note{transition:top 45ms linear}

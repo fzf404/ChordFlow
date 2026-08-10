@@ -26,35 +26,35 @@ const catalog:CatalogSong[] = [
   {id:"210",title:"勇气",artist:"梁静茹",tone:"C",color:"#f3c86c",group:"pop",source:"pop909"},
   {id:"220",title:"十年",artist:"陈奕迅",tone:"F",color:"#7dd4c4",group:"pop",source:"pop909"},
   {id:"017",title:"一剪梅",artist:"费玉清",tone:"G",color:"#d7b5ff",group:"pop",source:"pop909"},
-  {id:"lesson-keys",title:"认识中央 C",artist:"第 1 课 · 键盘定位",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,65,64,62,60]},
-  {id:"lesson-five",title:"右手五指练习",artist:"第 2 课 · C–G",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,67,65,64,62,60]},
-  {id:"lesson-chords",title:"三个基础和弦",artist:"第 3 课 · C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
-  {id:"lesson-hands",title:"双手协调入门",artist:"第 4 课 · 固定低音",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lesson:[48,60,52,62,55,64,53,65,55,67,48,60]},
-  {id:"lesson-rhythm",title:"四分与八分节奏",artist:"第 5 课 · 稳定拍点",tone:"C",color:"#ffad7b",group:"beginner",source:"lesson",lesson:[60,60,62,62,64,65,64,62,60,60,60,60]},
-  {id:"lesson-scale",title:"C 大调音阶",artist:"第 6 课 · 穿指准备",tone:"C",color:"#78d7ba",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,69,71,72,71,69,67,65,64,62,60]},
-  {id:"lesson-broken",title:"分解和弦练习",artist:"第 7 课 · C / Am / F / G",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lesson:[48,52,55,52,45,48,52,48,53,57,60,57,55,59,62,59]},
-  {id:"lesson-sight",title:"八小节视奏",artist:"第 8 课 · 综合练习",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lesson:[60,62,64,60,65,67,64,62,60,64,67,65,64,62,60,60]},
-  {id:"lesson-left",title:"左手五指练习",artist:"第 9 课 · C–G 低音区",tone:"C",color:"#82d8a5",group:"beginner",source:"lesson",lesson:[48,50,52,53,55,55,53,52,50,48]},
-  {id:"lesson-waltz",title:"三拍子与附点",artist:"第 10 课 · 圆舞曲律动",tone:"F",color:"#f0bc83",group:"beginner",source:"lesson",lesson:[53,60,64,53,60,65,55,62,65,53,60,64]},
-  {id:"lesson-cadence",title:"主和弦连接",artist:"第 11 课 · I–IV–V–I",tone:"C",color:"#9fc4ff",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55,60]},
-  {id:"lesson-minor",title:"A 小调音阶",artist:"第 12 课 · 自然小调",tone:"Am",color:"#c7a4ee",group:"beginner",source:"lesson",lesson:[57,59,60,62,64,65,67,69,67,65,64,62,60,59,57]},
-  {id:"lesson-shift",title:"换位与跨指",artist:"第 13 课 · 扩展音域",tone:"G",color:"#78d4d1",group:"beginner",source:"lesson",lesson:[55,57,59,60,62,64,66,67,66,64,62,60,59,57,55]},
-  {id:"lesson-arpeggio",title:"琶音基础",artist:"第 14 课 · C / G / Am / F",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lesson:[48,52,55,60,55,52,43,47,50,55,50,47,45,48,52,57,53,57,60,65]},
-  {id:"lesson-legato",title:"连奏与踏板意识",artist:"第 15 课 · 旋律呼吸",tone:"F",color:"#ef9fb4",group:"beginner",source:"lesson",lesson:[53,57,60,65,64,62,60,57,55,60,62,65,64,60,57,53]},
-  {id:"lesson-piece",title:"综合小作品",artist:"第 16 课 · 双手与和弦",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[48,60,52,64,55,67,53,65,48,60,55,64,52,62,48,60,64,67,72]},
+  {id:"lesson-keys",title:"第 01 课 · 找到中央 C",artist:"键盘定位",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[60,60,62,60,59,60,64,60]},
+  {id:"lesson-five",title:"第 02 课 · 右手五指",artist:"固定手位 C–G",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,65,64,62,60]},
+  {id:"lesson-left",title:"第 03 课 · 左手五指",artist:"固定手位 C–G",tone:"C",color:"#82d8a5",group:"beginner",source:"lesson",lesson:[48,50,52,53,55,53,52,50,48]},
+  {id:"lesson-rhythm",title:"第 04 课 · 基础节奏",artist:"四分与八分音符",tone:"C",color:"#ffad7b",group:"beginner",source:"lesson",lesson:[60,60,62,62,64,65,64,62,60,62,64,60]},
+  {id:"lesson-waltz",title:"第 05 课 · 三拍子",artist:"强、弱、弱",tone:"F",color:"#f0bc83",group:"beginner",source:"lesson",lesson:[53,60,64,53,60,64,55,62,65,53,60,64]},
+  {id:"lesson-scale",title:"第 06 课 · C 大调音阶",artist:"八度与穿指",tone:"C",color:"#78d7ba",group:"beginner",source:"lesson",lesson:[60,62,64,65,67,69,71,72,71,69,67,65,64,62,60]},
+  {id:"lesson-shift",title:"第 07 课 · 换位与跨指",artist:"扩展右手音域",tone:"G",color:"#78d4d1",group:"beginner",source:"lesson",lesson:[55,57,59,60,62,64,66,67,66,64,62,60,59,57,55]},
+  {id:"lesson-chords",title:"第 08 课 · 三个基础和弦",artist:"C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
+  {id:"lesson-cadence",title:"第 09 课 · 和弦转换",artist:"I–IV–V–I",tone:"C",color:"#9fc4ff",group:"beginner",source:"lesson",lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
+  {id:"lesson-broken",title:"第 10 课 · 分解和弦",artist:"C / Am / F / G",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lesson:[48,52,55,52,45,48,52,48,53,57,60,57,55,59,62,59]},
+  {id:"lesson-hands",title:"第 11 课 · 双手固定音",artist:"低音与旋律配合",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lesson:[48,60,48,62,48,64,48,65,55,67,55,65,48,60]},
+  {id:"lesson-sight",title:"第 12 课 · 双手短乐句",artist:"四小节不中断",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lesson:[48,60,52,62,55,64,52,60,53,65,55,67,48,64,48,60]},
+  {id:"lesson-minor",title:"第 13 课 · A 小调音阶",artist:"自然小调音色",tone:"Am",color:"#c7a4ee",group:"beginner",source:"lesson",lesson:[57,59,60,62,64,65,67,69,67,65,64,62,60,59,57]},
+  {id:"lesson-arpeggio",title:"第 14 课 · 琶音基础",artist:"跨越三个音区",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lesson:[48,52,55,60,64,67,72,67,64,60,55,52,48]},
+  {id:"lesson-legato",title:"第 15 课 · 连奏与乐句",artist:"旋律呼吸",tone:"F",color:"#ef9fb4",group:"beginner",source:"lesson",lesson:[53,57,60,65,64,62,60,57,55,60,62,65,64,60,57,53]},
+  {id:"lesson-piece",title:"第 16 课 · 综合小作品",artist:"节奏、和弦与双手",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lesson:[48,60,52,64,55,67,53,65,48,60,55,64,52,62,48,60,64,67,72]},
   {id:"classical-minuet",title:"G 大调小步舞曲",artist:"巴赫 · BWV Anh.114",tone:"G",color:"#e7bd72",group:"classical",source:"midi",midi:"/data/classical/minuet-g.mid"},
-  {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔 · Allegretto",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
+  {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
   {id:"classical-schumann",title:"旋律",artist:"舒曼 · 少年曲集 Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
   {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"A",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},
   {id:"classical-elise",title:"致爱丽丝",artist:"贝多芬 · WoO 59",tone:"A",color:"#a8a3ff",group:"classical",source:"midi",midi:"/data/classical/fur-elise.mid"},
-  {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545 第一乐章",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
-  {id:"classical-moonlight-1",title:"月光奏鸣曲",artist:"贝多芬 · Op.27 No.2 第一乐章",tone:"C#m",color:"#869be8",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-1.mid"},
-  {id:"classical-moonlight-2",title:"月光奏鸣曲 · 小快板",artist:"贝多芬 · Op.27 No.2 第二乐章",tone:"Db",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-2.mid"},
-  {id:"classical-moonlight-3",title:"月光奏鸣曲 · 急板",artist:"贝多芬 · Op.27 No.2 第三乐章",tone:"C#m",color:"#717fe0",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-3.mid"},
+  {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
+  {id:"classical-moonlight-1",title:"月光奏鸣曲",artist:"贝多芬 · Op.27 No.2",tone:"C#m",color:"#869be8",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-1.mid"},
+  {id:"classical-prelude-c",title:"C 大调前奏曲",artist:"巴赫 · BWV 846",tone:"C",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/bach-prelude-c-major.mid"},
+  {id:"classical-turkish",title:"土耳其进行曲",artist:"莫扎特 · K.331",tone:"Am",color:"#717fe0",group:"classical",source:"midi",midi:"/data/classical/mozart-turkish-march.mid"},
   {id:"classical-prelude-e",title:"E 小调前奏曲",artist:"肖邦 · Op.28 No.4",tone:"Em",color:"#c899aa",group:"classical",source:"midi",midi:"/data/classical/chopin-prelude-e-minor.mid"},
   {id:"classical-nocturne",title:"降 E 大调夜曲",artist:"肖邦 · Op.9 No.2",tone:"Eb",color:"#b5a2df",group:"classical",source:"midi",midi:"/data/classical/chopin-nocturne-op9-2.mid"},
-  {id:"classical-pathetique",title:"悲怆奏鸣曲 · 如歌的柔板",artist:"贝多芬 · Op.13 第二乐章",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
-  {id:"classical-appassionata",title:"热情奏鸣曲 · 行板",artist:"贝多芬 · Op.57 第二乐章",tone:"Db",color:"#d38d7e",group:"classical",source:"midi",midi:"/data/classical/beethoven-appassionata-2.mid"},
+  {id:"classical-pathetique",title:"悲怆奏鸣曲",artist:"贝多芬 · Op.13",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
+  {id:"classical-appassionata",title:"热情奏鸣曲",artist:"贝多芬 · Op.57",tone:"Db",color:"#d38d7e",group:"classical",source:"midi",midi:"/data/classical/beethoven-appassionata-2.mid"},
   {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
   {id:"classical-clementi",title:"C 大调小奏鸣曲",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
   {id:"classical-funeral",title:"C 小调葬礼进行曲",artist:"莫扎特 · K.453a",tone:"Cm",color:"#9f9ca8",group:"classical",source:"midi",midi:"/data/classical/mozart-funeral-march.mid"},
@@ -75,6 +75,7 @@ const keyX=(m:number)=>{
   return before/whiteMidis.length;
 };
 const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,"0")}`;
+const notesBetween=(notes:PianoNote[],start:number,end:number,limit:number)=>{let low=0,high=notes.length;while(low<high){const mid=(low+high)>>1;if(notes[mid].time<start)low=mid+1;else high=mid}const result:PianoNote[]=[];for(let i=low;i<notes.length&&notes[i].time<=end&&result.length<limit;i++)result.push(notes[i]);return result};
 const pitchNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const pitchIndex:Record<string,number>={C:0,"C#":1,Db:1,D:2,"D#":3,Eb:3,E:4,Fb:4,"E#":5,F:5,"F#":6,Gb:6,G:7,"G#":8,Ab:8,A:9,"A#":10,Bb:10,B:11,Cb:11};
 const chordLabel=(raw:string)=>{
@@ -90,16 +91,16 @@ const chordLabel=(raw:string)=>{
 };
 
 const beginnerGuides:Record<string,{goal:string;steps:string[]}>= {
-  "lesson-keys":{goal:"找到中央 C，建立键盘方向感",steps:["先观察中央 C 的位置","用右手拇指跟随下落音符","保持均匀速度完成一遍"]},
+  "lesson-keys":{goal:"只围绕中央 C 建立键盘定位感",steps:["找到两颗黑键左侧的 C","用右手拇指反复确认位置","每次离开后重新找回中央 C"]},
   "lesson-five":{goal:"熟悉右手 1–5 指的自然位置",steps:["五指轻放在 C–G","手腕放松，不要抬高手指","先用 0.5×，再尝试原速"]},
   "lesson-chords":{goal:"认识 C、F、G 三个基础和弦",steps:["先看顶部和弦名称","同时按下同色音符","留意和弦切换前的准备时间"]},
   "lesson-hands":{goal:"建立左右手独立配合",steps:["绿色低音交给左手","蓝色高音交给右手","分手练熟后再合手"]},
-  "lesson-rhythm":{goal:"稳定四分与八分音符节拍",steps:["跟着落点保持匀速","短音不要拖长","卡顿时降到 0.75×"]},
+  "lesson-rhythm":{goal:"区分四分与八分音符的时值",steps:["先用手数出稳定拍点","短音保持轻巧不拖长","确认节奏后再关注音高"]},
   "lesson-scale":{goal:"完整弹奏 C 大调音阶",steps:["右手上行提前准备穿指","下行保持指序连贯","每个音保持相同力度"]},
   "lesson-broken":{goal:"用分解形式连接常用和弦",steps:["先记住每组四个音","手掌保持稳定移动","听清每组和弦的连接"]},
-  "lesson-sight":{goal:"完成八小节综合视奏",steps:["先看音区和节奏","不中断完成第一次","第二次再修正错音"]},
+  "lesson-sight":{goal:"让左右手完成一段连续短乐句",steps:["先分别看清左右手音区","保持低音与旋律交替","不中断完成后再修正错音"]},
   "lesson-left":{goal:"建立左手五指的独立控制",steps:["小指放在低音 C","手腕保持自然水平","先慢速上行再下行"]},
-  "lesson-waltz":{goal:"感受三拍子的强弱弱律动",steps:["第一拍稍有支撑","第二、三拍保持轻巧","边数一二三边跟弹"]},
+  "lesson-waltz":{goal:"感受三拍子的强、弱、弱律动",steps:["第一拍稍有支撑","第二、三拍保持轻巧","边数一二三边跟弹"]},
   "lesson-cadence":{goal:"听辨并弹奏 I–IV–V–I 终止式",steps:["分别找到三个和弦手型","观察共同音减少移动","最后的 C 和弦自然收束"]},
   "lesson-minor":{goal:"熟悉 A 自然小调的音阶结构",steps:["从 A 音开始定位","留意全音与半音关系","上下行保持同样速度"]},
   "lesson-shift":{goal:"通过换位扩展右手活动范围",steps:["先分组记住五指位置","移动前放松手腕","换位后快速确认拇指落点"]},
@@ -115,8 +116,8 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-elise":{level:"初中级",focus:"弱起、连奏与层次",steps:["先固定主题指法","左手分解和弦保持均匀","主题重复时控制力度变化"]},
   "classical-k545":{level:"中级",focus:"古典奏鸣曲的均衡与颗粒感",steps:["先分别整理左右手指法","十六分音符保持均匀","合手时从 0.5× 开始"]},
   "classical-moonlight-1":{level:"中级",focus:"三连音织体与旋律层次",steps:["先单练持续三连音","高声部旋律保持歌唱性","用轻触键营造安静氛围"]},
-  "classical-moonlight-2":{level:"中级",focus:"轻盈舞步与声部平衡",steps:["保持小快板的弹性","左手不要压住旋律","句尾留出自然呼吸"]},
-  "classical-moonlight-3":{level:"高级",focus:"快速琶音与爆发力控制",steps:["分组练习快速音型","手臂保持放松不僵硬","从低速逐段衔接"]},
+  "classical-prelude-c":{level:"初中级",focus:"分解和弦与和声流动",steps:["按和声位置分组练习","每组音型保持均匀","低音变化时提前准备手位"]},
+  "classical-turkish":{level:"中高级",focus:"快速音型与清晰触键",steps:["先分组练习主题音型","保持手腕轻巧放松","从低速逐段连接"]},
   "classical-prelude-e":{level:"初中级",focus:"和声进行与旋律呼吸",steps:["先听清左手和声变化","右手旋律保持连贯","延长音处控制自然衰减"]},
   "classical-nocturne":{level:"中高级",focus:"装饰音与夜曲式歌唱性",steps:["先略去装饰音理顺旋律","左手伴奏保持均匀","装饰音轻巧融入拍点"]},
   "classical-pathetique":{level:"中级",focus:"如歌旋律与宽广伴奏",steps:["右手主题保持深连奏","左手和弦控制音量","重复乐句做出层次变化"]},
@@ -163,7 +164,7 @@ export default function Home(){
     SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
   },[]);
 
-  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right",delay=0,scheduleVersion?:number)=>{
+  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right",delay=0,scheduleVersion?:number,visualize=true)=>{
     const Ctx=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext;
     const ctx=audioRef.current||new Ctx(); audioRef.current=ctx;
     if(ctx.state==="suspended")await ctx.resume();
@@ -180,8 +181,7 @@ export default function Home(){
     gain.gain.setValueAtTime(Math.max(.04,.42*velocity),startAt);gain.gain.exponentialRampToValueAtTime(.0001,startAt+release);
     source.connect(gain).connect(ctx.destination);source.start(startAt);source.stop(startAt+release+.05);
     if(scheduleVersion!==undefined){scheduledSourcesRef.current.add(source);source.onended=()=>scheduledSourcesRef.current.delete(source)}
-    const activeKey=`${midi}-${hand}`;
-    window.setTimeout(()=>{setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800)},Math.max(0,delay)*1000);
+    if(visualize){const activeKey=`${midi}-${hand}`;window.setTimeout(()=>{setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800)},Math.max(0,delay)*1000)}
   },[]);
 
   useEffect(()=>{
@@ -190,10 +190,13 @@ export default function Home(){
       setLoading(true);setPlaying(false);setCurrentTime(0);playedRef.current.clear();
       if(song.source==="lesson"){
         const sequence=song.lesson??[];
-        const notes:PianoNote[]=sequence.map((midi,index)=>({midi,name:midiName(midi),time:index*.72,duration:.56,velocity:.72,hand:midi<60?"left":"right"}));
-        const chordNames=song.id==="lesson-chords"?["C","F","G","C"]:[];
-        const chords=chordNames.map((name,index)=>({start:index*2.16,end:(index+1)*2.16,name}));
-        if(!cancelled)setData({duration:Math.max(6,sequence.length*.72+.8),bpm:84,notes,melody:[],chords});
+        const chordLesson=song.id==="lesson-chords"||song.id==="lesson-cadence";
+        const notes:PianoNote[]=sequence.map((midi,index)=>({midi,name:midiName(midi),time:chordLesson?Math.floor(index/3)*1.8:index*.72,duration:chordLesson?1.35:.56,velocity:.72,hand:midi<60?"left":"right"}));
+        const chordNames=chordLesson?["C","F","G","C"]:song.id==="lesson-broken"?["C","Am","F","G"]:[];
+        const chordSpan=chordLesson?1.8:2.88;
+        const chords=chordNames.map((name,index)=>({start:index*chordSpan,end:(index+1)*chordSpan,name}));
+        const duration=Math.max(6,(notes.at(-1)?.time??0)+(chordLesson?1.8:1.1));
+        if(!cancelled)setData({duration,bpm:84,notes,melody:[],chords});
         if(!cancelled)setLoading(false);return;
       }
       const base=`/data/pop909/${song.id}`;
@@ -215,23 +218,33 @@ export default function Home(){
     startRef.current=performance.now();startTimeRef.current=currentTime;
     const scheduleVersion=++scheduleVersionRef.current;
     playedRef.current.clear();
-    let timer=0;
-    const tick=()=>{
-      const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
-      setCurrentTime(next);
-      const scheduleUntil=Math.min(data.duration,next+12*speed);
-      data.notes.filter(n=>n.time>=next-.04&&n.time<=scheduleUntil).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity,n.hand,Math.max(0,(n.time-next)/speed),scheduleVersion)}});
-      if(melodyEnabled)data.melody.filter(n=>n.time>=next-.04&&n.time<=scheduleUntil).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12),"right",Math.max(0,(n.time-next)/speed),scheduleVersion)}});
-      if(next>=data.duration)setPlaying(false);else timer=window.setTimeout(tick,500);
+    const nowTime=()=>Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
+    const firstAtOrAfter=(notes:PianoNote[],time:number)=>{let low=0,high=notes.length;while(low<high){const mid=(low+high)>>1;if(notes[mid].time<time)low=mid+1;else high=mid}return low};
+    let noteIndex=firstAtOrAfter(data.notes,currentTime-.04);
+    let melodyIndex=firstAtOrAfter(data.melody,currentTime-.04);
+    const scheduleAudio=()=>{
+      const next=nowTime(),scheduleUntil=Math.min(data.duration,next+12*speed);
+      while(noteIndex<data.notes.length&&data.notes[noteIndex].time<=scheduleUntil){const n=data.notes[noteIndex++];if(n.time>=next-.04)playTone(n.midi,n.duration/speed,n.velocity,n.hand,Math.max(0,(n.time-next)/speed),scheduleVersion,false)}
+      if(melodyEnabled)while(melodyIndex<data.melody.length&&data.melody[melodyIndex].time<=scheduleUntil){const n=data.melody[melodyIndex++];if(n.time>=next-.04)playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12),"right",Math.max(0,(n.time-next)/speed),scheduleVersion,false)}
     };
-    tick();return()=>{window.clearTimeout(timer);scheduleVersionRef.current++;scheduledSourcesRef.current.forEach(source=>{try{source.stop()}catch{}});scheduledSourcesRef.current.clear()};
+    scheduleAudio();
+    const scheduler=window.setInterval(scheduleAudio,1000);
+    let frame=0,lastPaint=0;
+    const paint=(timestamp:number)=>{
+      const next=nowTime();
+      if(timestamp-lastPaint>=32){lastPaint=timestamp;setCurrentTime(next)}
+      if(next>=data.duration)setPlaying(false);else frame=requestAnimationFrame(paint);
+    };
+    frame=requestAnimationFrame(paint);
+    return()=>{window.clearInterval(scheduler);cancelAnimationFrame(frame);scheduleVersionRef.current++;scheduledSourcesRef.current.forEach(source=>{try{source.stop()}catch{}});scheduledSourcesRef.current.clear()};
   },[playing,data,speed,playTone,melodyEnabled]);
 
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
   const currentChord=data?.chords.find(c=>currentTime>=c.start&&currentTime<c.end);
   const nextChord=data?.chords.find(c=>c.start>(currentChord?.start??currentTime));
-  const visibleNotes=useMemo(()=>data?.notes.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,60)??[],[data,currentTime]);
-  const visibleMelody=useMemo(()=>melodyEnabled?(data?.melody.filter(n=>n.time>=currentTime-.12&&n.time<=currentTime+4.2).slice(0,30)??[]):[],[data,currentTime,melodyEnabled]);
+  const visibleNotes=useMemo(()=>data?notesBetween(data.notes,currentTime-.12,currentTime+4.2,60):[],[data,currentTime]);
+  const visibleMelody=useMemo(()=>melodyEnabled&&data?notesBetween(data.melody,currentTime-.12,currentTime+4.2,30):[],[data,currentTime,melodyEnabled]);
+  const soundingKeys=useMemo(()=>{const keys=new Set(activeKeys);visibleNotes.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-${n.hand}`)});visibleMelody.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-right`)});return keys},[activeKeys,visibleNotes,visibleMelody,currentTime]);
   const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
   const beginnerGuide=beginnerGuides[song.id];
   const classicalGuide=classicalGuides[song.id];
@@ -277,7 +290,7 @@ export default function Home(){
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
-                <div className="real-piano">{whiteMidis.map(m=>{const hand=activeKeys.includes(`${m}-right`)?"right":activeKeys.includes(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=activeKeys.includes(`${m}-right`)?"right":activeKeys.includes(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`calc(${keyX(m)*100}% - 7px)`}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
+                <div className="real-piano">{whiteMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`calc(${keyX(m)*100}% - 7px)`}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
               </div>
             </div>
           </div>
