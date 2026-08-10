@@ -109,8 +109,9 @@ export default function Home(){
   const sampleBuffersRef=useRef(new Map<number,AudioBuffer>());
   const startRef=useRef(0);
   const startTimeRef=useRef(0);
-  const hiddenAtRef=useRef<number|null>(null);
   const playedRef=useRef(new Set<string>());
+  const scheduledSourcesRef=useRef(new Set<AudioBufferSourceNode>());
+  const scheduleVersionRef=useRef(0);
   const song=catalog[songIndex];
   const groupSongs=catalog.map((item,index)=>({item,index})).filter(({item})=>item.group===group);
 
@@ -125,7 +126,7 @@ export default function Home(){
     SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
   },[]);
 
-  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right")=>{
+  const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right",delay=0,scheduleVersion?:number)=>{
     const Ctx=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext;
     const ctx=audioRef.current||new Ctx(); audioRef.current=ctx;
     if(ctx.state==="suspended")await ctx.resume();
@@ -136,12 +137,14 @@ export default function Home(){
       const bytes:ArrayBuffer=cachedBytes??await fetch(`/audio/piano/${sampleFile(sample)}`).then(r=>r.arrayBuffer());
       buffer=await ctx.decodeAudioData(bytes.slice(0));sampleBuffersRef.current.set(sample,buffer);
     }
-    const source=ctx.createBufferSource(),gain=ctx.createGain(),now=ctx.currentTime,release=Math.min(4,Math.max(1.2,duration+1.8));
+    if(scheduleVersion!==undefined&&scheduleVersion!==scheduleVersionRef.current)return;
+    const source=ctx.createBufferSource(),gain=ctx.createGain(),now=ctx.currentTime,startAt=now+Math.max(0,delay),release=Math.min(4,Math.max(1.2,duration+1.8));
     source.buffer=buffer;source.playbackRate.value=Math.pow(2,(midi-sample)/12);
-    gain.gain.setValueAtTime(Math.max(.04,.42*velocity),now);gain.gain.exponentialRampToValueAtTime(.0001,now+release);
-    source.connect(gain).connect(ctx.destination);source.start(now);source.stop(now+release+.05);
+    gain.gain.setValueAtTime(Math.max(.04,.42*velocity),startAt);gain.gain.exponentialRampToValueAtTime(.0001,startAt+release);
+    source.connect(gain).connect(ctx.destination);source.start(startAt);source.stop(startAt+release+.05);
+    if(scheduleVersion!==undefined){scheduledSourcesRef.current.add(source);source.onended=()=>scheduledSourcesRef.current.delete(source)}
     const activeKey=`${midi}-${hand}`;
-    setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800);
+    window.setTimeout(()=>{setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800)},Math.max(0,delay)*1000);
   },[]);
 
   useEffect(()=>{
@@ -173,30 +176,19 @@ export default function Home(){
   useEffect(()=>{
     if(!playing||!data)return;
     startRef.current=performance.now();startTimeRef.current=currentTime;
-    let frame=0,lastTime=currentTime;
+    const scheduleVersion=++scheduleVersionRef.current;
+    playedRef.current.clear();
+    let timer=0;
     const tick=()=>{
       const next=Math.min(data.duration,startTimeRef.current+(performance.now()-startRef.current)/1000*speed);
       setCurrentTime(next);
-      const scheduleFrom=next-lastTime>.2?next-.04:lastTime-.02;
-      data.notes.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity,n.hand)}});
-      if(melodyEnabled)data.melody.filter(n=>n.time>scheduleFrom&&n.time<=next+.035).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12),"right")}});
-      lastTime=next;
-      if(next>=data.duration)setPlaying(false);else frame=requestAnimationFrame(tick);
+      const scheduleUntil=Math.min(data.duration,next+12*speed);
+      data.notes.filter(n=>n.time>=next-.04&&n.time<=scheduleUntil).forEach(n=>{const key=`${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,n.velocity,n.hand,Math.max(0,(n.time-next)/speed),scheduleVersion)}});
+      if(melodyEnabled)data.melody.filter(n=>n.time>=next-.04&&n.time<=scheduleUntil).forEach(n=>{const key=`melody-${n.time}-${n.midi}`;if(!playedRef.current.has(key)){playedRef.current.add(key);playTone(n.midi,n.duration/speed,Math.min(1,n.velocity*1.12),"right",Math.max(0,(n.time-next)/speed),scheduleVersion)}});
+      if(next>=data.duration)setPlaying(false);else timer=window.setTimeout(tick,500);
     };
-    frame=requestAnimationFrame(tick);return()=>cancelAnimationFrame(frame);
+    tick();return()=>{window.clearTimeout(timer);scheduleVersionRef.current++;scheduledSourcesRef.current.forEach(source=>{try{source.stop()}catch{}});scheduledSourcesRef.current.clear()};
   },[playing,data,speed,playTone,melodyEnabled]);
-
-  useEffect(()=>{
-    const onVisibility=()=>{
-      if(document.hidden){hiddenAtRef.current=performance.now();return}
-      if(hiddenAtRef.current!==null){
-        if(playing)startRef.current+=performance.now()-hiddenAtRef.current;
-        hiddenAtRef.current=null;
-      }
-    };
-    document.addEventListener("visibilitychange",onVisibility);
-    return()=>document.removeEventListener("visibilitychange",onVisibility);
-  },[playing]);
 
   const seek=(time:number)=>{setPlaying(false);setCurrentTime(Math.max(0,Math.min(data?.duration??0,time)));playedRef.current.clear()};
   const currentChord=data?.chords.find(c=>currentTime>=c.start&&currentTime<c.end);
