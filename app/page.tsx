@@ -57,14 +57,16 @@ const catalog:CatalogSong[] = [
   {id:"classical-pathetique-1",title:"悲怆奏鸣曲 · 第一乐章",artist:"贝多芬 · Op.13",tone:"Cm",color:"#e0b18c",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-1.mid"},
   {id:"classical-pathetique-2",title:"悲怆奏鸣曲 · 第二乐章",artist:"贝多芬 · Op.13",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
   {id:"classical-pathetique-3",title:"悲怆奏鸣曲 · 第三乐章",artist:"贝多芬 · Op.13",tone:"Cm",color:"#c88e78",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-3.mid"},
-  {id:"classical-appassionata",title:"热情奏鸣曲 · 第二乐章",artist:"贝多芬 · Op.57",tone:"Db",color:"#d38d7e",group:"classical",source:"midi",midi:"/data/classical/beethoven-appassionata-2.mid"},
   {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
   {id:"classical-funeral",title:"C 小调葬礼进行曲",artist:"莫扎特 · K.453a",tone:"Cm",color:"#9f9ca8",group:"classical",source:"midi",midi:"/data/classical/mozart-funeral-march.mid"},
   {id:"classical-prelude-e",title:"E 小调前奏曲",artist:"肖邦 · Op.28 No.4",tone:"Em",color:"#c899aa",group:"classical",source:"midi",midi:"/data/classical/chopin-prelude-e-minor.mid"},
   {id:"classical-nocturne",title:"降 E 大调夜曲",artist:"肖邦 · Op.9 No.2",tone:"Eb",color:"#b5a2df",group:"classical",source:"midi",midi:"/data/classical/chopin-nocturne-op9-2.mid"},
+  {id:"classical-raindrop",title:"雨滴前奏曲",artist:"肖邦 · Op.28 No.15",tone:"Db",color:"#8fa9d8",group:"classical",source:"midi",midi:"/data/classical/chopin-raindrop-prelude.mid"},
   {id:"classical-schubert-impromptu",title:"降 G 大调即兴曲",artist:"舒伯特 · Op.90 No.3",tone:"Gb",color:"#9eb2d8",group:"classical",source:"midi",midi:"/data/classical/schubert-impromptu-op90-3.mid"},
   {id:"classical-brahms-waltz",title:"降 A 大调圆舞曲",artist:"勃拉姆斯 · Op.39 No.15",tone:"Ab",color:"#d8a9b2",group:"classical",source:"midi",midi:"/data/classical/brahms-waltz-op39-15.mid"},
+  {id:"classical-brahms-intermezzo",title:"A 大调间奏曲",artist:"勃拉姆斯 · Op.118 No.2",tone:"A",color:"#c69dac",group:"classical",source:"midi",midi:"/data/classical/brahms-intermezzo-op118-2.mid"},
   {id:"classical-clair-de-lune",title:"月光",artist:"德彪西 · 贝加马斯克组曲",tone:"Db",color:"#88aee0",group:"classical",source:"midi",midi:"/data/classical/debussy-clair-de-lune.mid"},
+  {id:"classical-scriabin-prelude",title:"C 大调前奏曲",artist:"斯克里亚宾 · Op.11 No.1",tone:"C",color:"#b091d3",group:"classical",source:"midi",midi:"/data/classical/scriabin-prelude-op11-1.mid"},
   {id:"classical-clementi",title:"C 大调小奏鸣曲",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
 ];
 
@@ -134,13 +136,15 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-pathetique-1":{level:"高级",focus:"强烈对比与快速音型",steps:["分别练习慢速引子与主题","和弦整齐有支撑","快速段落从分组慢练开始"]},
   "classical-pathetique-2":{level:"中级",focus:"歌唱性旋律与宽广伴奏",steps:["右手主题保持深连奏","左手和弦控制音量","重复乐句做出层次变化"]},
   "classical-pathetique-3":{level:"中高级",focus:"回旋主题与轻巧触键",steps:["先固定主题指法","保持快速音符清楚均匀","主题返回时做出层次变化"]},
-  "classical-appassionata":{level:"中高级",focus:"变奏层次与长线条",steps:["先建立主题的平静脉搏","每次变奏逐步增强张力","低音声部保持清晰"]},
   "classical-invention":{level:"中级",focus:"二声部独立与模仿",steps:["分别唱出两个声部","左右手都保持清楚触键","主题进入时稍作突出"]},
   "classical-clementi":{level:"初中级",focus:"古典句法与快速音阶",steps:["划分四小节乐句","音阶指法保持稳定","伴奏轻于主旋律"]},
   "classical-funeral":{level:"中级",focus:"进行曲脉搏与沉稳音色",steps:["保持稳定而克制的速度","和弦整齐落键","强弱变化不要突然"]},
   "classical-schubert-impromptu":{level:"高级",focus:"长线条与连续音型",steps:["先分层练习旋律与伴奏","连续音型保持均匀放松","用和声变化推动乐句"]},
   "classical-brahms-waltz":{level:"中级",focus:"圆舞曲律动与内声部",steps:["保持三拍子的自然摆动","旋律高于伴奏声部","句尾做出柔和收束"]},
+  "classical-brahms-intermezzo":{level:"高级",focus:"内声部层次与深沉音色",steps:["先找出隐藏在和弦中的旋律","控制伴奏声部保持柔和","用和声变化组织长乐句"]},
   "classical-clair-de-lune":{level:"高级",focus:"音色层次与自由呼吸",steps:["先确定旋律声部走向","和弦保持柔和透明","速度变化服从乐句呼吸"]},
+  "classical-raindrop":{level:"中高级",focus:"持续音型与戏剧性层次",steps:["保持重复音稳定而不僵硬","中段逐步建立力度张力","旋律始终浮在伴奏上方"]},
+  "classical-scriabin-prelude":{level:"中高级",focus:"复合节奏与浪漫派呼吸",steps:["先分别稳定左右手节奏","合手时确认重拍位置","保持旋律连贯并避免过度用力"]},
 };
 
 export default function Home(){
