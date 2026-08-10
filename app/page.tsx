@@ -103,6 +103,7 @@ export default function Home(){
   const [lyricsEnabled,setLyricsEnabled]=useState(true);
   const [panel,setPanel]=useState<"guide"|"data">("guide");
   const [mobileLibraryOpen,setMobileLibraryOpen]=useState(false);
+  const [mobileGuideOpen,setMobileGuideOpen]=useState(false);
   const audioRef=useRef<AudioContext|null>(null);
   const sampleBytesRef=useRef(new Map<number,ArrayBuffer>());
   const sampleBuffersRef=useRef(new Map<number,AudioBuffer>());
@@ -214,21 +215,22 @@ export default function Home(){
     <header className="cf-topbar"><div className="cf-logo"><i>♪</i><span>Chord<b>Flow</b></span></div></header>
     <div className="cf-layout">
       <aside className="library">
-        <div className="library-title"><span>CHORDFLOW 学习路径</span><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"8 节循序渐进课程":"6 首开放许可经典曲目"}</p></div>
+        <div className="library-title"><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{group==="pop"?"15 首真实 MIDI 编配":group==="beginner"?"8 节循序渐进课程":"6 首开放许可经典曲目"}</p></div>
         <div className="library-groups"><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>教学</button><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
         <button className="mobile-song-picker" aria-expanded={mobileLibraryOpen} onClick={()=>setMobileLibraryOpen(open=>!open)}><i style={{"--song-color":song.color} as React.CSSProperties}>♪</i><span><small>当前{group==="beginner"?"课程":"曲目"}</small><strong>{song.title}</strong></span><em>{song.tone}</em><b>{mobileLibraryOpen?"收起":"更换"}</b></button>
         <div className={`song-list${mobileLibraryOpen?" mobile-open":""}`}>{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
-        <div className="data-credit"><strong>数据与音源</strong><p>POP909 · Mutopia Project</p><small>古典 MIDI：公共领域 / CC BY-SA；钢琴音色：Salamander Grand Piano V3，CC BY 3.0。</small></div>
+        <div className="data-credit"><strong>数据来源</strong><p>POP909 · Mutopia Project</p><small>古典曲目使用开放许可 MIDI<br/>钢琴音色使用 Salamander Grand Piano</small></div>
       </aside>
 
       <section className="studio">
-        <div className="song-head"><div><span className="kicker">{song.group==="beginner"?"教学课程":song.group==="pop"?"流行练习":"古典钢琴"}</span><h2>{song.title}</h2><p>{song.artist} · {data?`${Math.round(data.bpm)} BPM`:"载入中"} · {song.tone} 调</p></div><div className="head-stats"><span><small>总时长</small>{data?fmt(data.duration):"--:--"}</span></div></div>
+        <div className="song-head"><div><span className="kicker">{song.group==="beginner"?"教学课程":song.group==="pop"?"流行练习":"古典钢琴"}</span><h2>{song.title}</h2><p><span>{song.artist}</span><span>{data?`${Math.round(data.bpm)} BPM`:"载入中"}</span><span>{song.tone} 调</span><span>{data?fmt(data.duration):"--:--"}</span></p></div></div>
 
         <div className="player-card">
           {data?.chords.length?<div className="chord-row"><div className="current-chord"><span>当前和弦</span><strong>{chordLabel(currentChord?.name??"N")}</strong></div>{visibleChords.map((c,i)=><button key={`${c.start}-${i}`} className={c===currentChord?"active":""} onClick={()=>seek(c.start)}><small>{fmt(c.start)}</small><strong>{chordLabel(c.name)}</strong></button>)}<div className="next-chord">下一个 <b>{chordLabel(nextChord?.name??"N")}</b></div></div>:<div className="no-chords"><span>此曲没有可靠的和弦标注，因此不显示推测结果</span></div>}
 
           <div className="learn-grid">
-            <aside className="lesson-panel">
+            <button className="mobile-guide-toggle" aria-expanded={mobileGuideOpen} onClick={()=>setMobileGuideOpen(open=>!open)}><span>{song.group==="beginner"?"课程指导":song.group==="classical"?"练习提示":"跟弹设置"}</span><b>{mobileGuideOpen?"收起":"查看"}</b></button>
+            <aside className={`lesson-panel${mobileGuideOpen?" mobile-open":""}`}>
               <div className="panel-tabs"><button className={panel==="guide"?"active":""} onClick={()=>setPanel("guide")}>{song.group==="beginner"?"课程指导":song.group==="classical"?"练习提示":"跟弹指引"}</button><button className={panel==="data"?"active":""} onClick={()=>setPanel("data")}>数据详情</button></div>
               {panel==="guide"?<>
                 {song.group==="beginner"&&beginnerGuide&&<div className="course-guide"><span className="guide-label">本课目标</span><h3>{beginnerGuide.goal}</h3><ol>{beginnerGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><div className="hand-key"><span><i className="lh"/>左手低音</span><span><i className="rh"/>右手高音</span></div></div>}
