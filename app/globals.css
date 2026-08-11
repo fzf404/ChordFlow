@@ -41,6 +41,13 @@
 .track-switches button+button.on span{color:#fff1e9}
 .track-switches button+button.on b{color:#ffb58b}
 .track-switches button+button.on i{background:var(--lyric);box-shadow:0 0 9px rgba(255,157,102,.58)}
+.track-switches .lyrics-switch.on{border-color:#805238;background:#2b1f19}
+.track-switches .lyrics-switch.on span{color:#fff1e9}.track-switches .lyrics-switch.on b{color:#ffb58b}
+.track-switches .lyrics-switch.on i{background:var(--lyric);box-shadow:0 0 9px rgba(255,157,102,.58)}
+.track-switches .melody-switch.on{border-color:#684f87;background:#241d2e}
+.track-switches .melody-switch.on span{color:#f4edff}.track-switches .melody-switch.on b{color:#d2b4ff}
+.track-switches .melody-switch.on i{background:var(--melody);box-shadow:0 0 9px rgba(184,140,255,.62)}
+.song-list button>i,.mobile-song-picker>i{font:750 12px var(--font-display);font-variant-numeric:tabular-nums}
 .lyrics-box{border-color:#694633;background:#251b17}
 .lyrics-box>small{color:#d4865b}.lyrics-box>strong{color:#fff0e8}.lyrics-box p{color:#9f7762}
 .lyrics-box label{border-color:#855d48;color:#f0a57d;background:rgba(255,157,102,.035)}

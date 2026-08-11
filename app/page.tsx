@@ -68,7 +68,7 @@ const legacyCatalog:CatalogSong[] = [
 
 const catalog:CatalogSong[] = [
   {id:"516",title:"晴天",artist:"周杰伦",tone:"G",color:"#d8ff62",group:"pop",source:"pop909"},
-  {id:"074",title:"东风破",artist:"周杰伦",tone:"Fm",color:"#c6a26e",group:"pop",source:"pop909"},
+  {id:"063",title:"不能说的秘密",artist:"周杰伦",tone:"G",color:"#c6a26e",group:"pop",source:"pop909"},
   {id:"292",title:"夜曲",artist:"周杰伦",tone:"Fm",color:"#809dff",group:"pop",source:"pop909"},
   {id:"702",title:"简单爱",artist:"周杰伦",tone:"C",color:"#ffd37c",group:"pop",source:"pop909"},
   {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"E",color:"#e88ca6",group:"pop",source:"pop909"},
@@ -78,10 +78,10 @@ const catalog:CatalogSong[] = [
   {id:"684",title:"突然好想你",artist:"五月天",tone:"D",color:"#9fc4ff",group:"pop",source:"pop909"},
   {id:"330",title:"小幸运",artist:"田馥甄",tone:"F",color:"#8ee8ff",group:"pop",source:"pop909"},
   {id:"346",title:"平凡之路",artist:"朴树",tone:"A",color:"#f0ad73",group:"pop",source:"pop909"},
-  {id:"274",title:"夜空中最亮的星",artist:"逃跑计划",tone:"B",color:"#73b8ff",group:"pop",source:"pop909"},
+  {id:"495",title:"日不落",artist:"蔡依林",tone:"Db",color:"#73b8ff",group:"pop",source:"pop909"},
   {id:"714",title:"红豆",artist:"王菲",tone:"C",color:"#eb88a9",group:"pop",source:"pop909"},
   {id:"170",title:"光年之外",artist:"邓紫棋",tone:"E",color:"#809dff",group:"pop",source:"pop909"},
-  {id:"210",title:"勇气",artist:"梁静茹",tone:"F",color:"#f3c86c",group:"pop",source:"pop909"},
+  {id:"354",title:"开始懂了",artist:"孙燕姿",tone:"B",color:"#f3c86c",group:"pop",source:"pop909"},
   {id:"823",title:"那些年",artist:"胡夏",tone:"F",color:"#a4df8d",group:"pop",source:"pop909"},
 
   {id:"lesson-keys",title:"第 01 课 · 键盘与中央 C",artist:"定位练习",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:72,lesson:[60,60,62,60,59,60,64,60]},
@@ -162,6 +162,7 @@ const chordLabel=(raw:string)=>{
   const degree=Number(inversion),interval=degree===3?(quality.startsWith("min")?3:4):degree===5?7:degree===7?(quality==="maj7"?11:10):0;
   return`${root}${suffix}/${pitchNames[(rootMidi+interval)%12]}`;
 };
+const lessonTitleParts=(title:string)=>{const match=title.match(/^第\s*(\d+)\s*课\s*·\s*(.+)$/);return match?{number:match[1],title:match[2]}:{number:"",title}};
 
 const beginnerGuides:Record<string,{goal:string;steps:string[]}>= {
   "lesson-keys":{goal:"只围绕中央 C 建立键盘定位感",steps:["找到两颗黑键左侧的 C","用右手拇指反复确认位置","每次离开后重新找回中央 C"]},
@@ -382,13 +383,13 @@ export default function Home(){
       <aside className="library">
         <div className="library-title"><h1>{group==="pop"?"流行练习":group==="beginner"?"教学课程":"古典钢琴"}</h1><p>{groupSongs.length} {group==="beginner"?"节循序渐进课程":group==="pop"?"首真实 MIDI 编配":"首开放许可经典曲目"}</p></div>
         <div className="library-groups"><button className={group==="beginner"?"active":""} onClick={()=>selectGroup("beginner")}>教学</button><button className={group==="pop"?"active":""} onClick={()=>selectGroup("pop")}>流行</button><button className={group==="classical"?"active":""} onClick={()=>selectGroup("classical")}>古典</button></div>
-        <button className="mobile-song-picker" aria-expanded={mobileLibraryOpen} onClick={()=>setMobileLibraryOpen(open=>!open)}><i style={{"--song-color":song.color} as React.CSSProperties}>♪</i><span><small>当前{group==="beginner"?"课程":"曲目"}</small><strong>{song.title}</strong></span><em>{song.tone}</em><b>{mobileLibraryOpen?"收起":"更换"}</b></button>
-        <div className={`song-list${mobileLibraryOpen?" mobile-open":""}`}>{groupSongs.map(({item,index})=><button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>♪</i><span><strong>{item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>)}</div>
+        <button className="mobile-song-picker" aria-expanded={mobileLibraryOpen} onClick={()=>setMobileLibraryOpen(open=>!open)}><i style={{"--song-color":song.color} as React.CSSProperties}>{song.group==="beginner"?lessonTitleParts(song.title).number:"♪"}</i><span><small>当前{group==="beginner"?"课程":"曲目"}</small><strong>{song.group==="beginner"?lessonTitleParts(song.title).title:song.title}</strong></span><em>{song.tone}</em><b>{mobileLibraryOpen?"收起":"更换"}</b></button>
+        <div className={`song-list${mobileLibraryOpen?" mobile-open":""}`}>{groupSongs.map(({item,index})=>{const lesson=item.group==="beginner"?lessonTitleParts(item.title):null;return <button key={item.id} className={songIndex===index?"selected":""} onClick={()=>selectSong(index)}><i style={{"--song-color":item.color} as React.CSSProperties}>{lesson?.number??"♪"}</i><span><strong>{lesson?.title??item.title}</strong><small>{item.artist}</small></span><em>{item.tone}</em></button>})}</div>
         <div className="data-credit"><strong>数据与音源</strong><p>POP909 · Mutopia Project</p><small>古典曲目使用开放许可 MIDI<br/>钢琴音色使用 Salamander Grand Piano</small></div>
       </aside>
 
       <section className="studio">
-        <div className="song-head"><div><span className="kicker">{song.group==="beginner"?"教学课程":song.group==="pop"?"流行练习":"古典钢琴"}</span><h2>{song.title}</h2><p><span>{song.artist}</span><span>{data?tempoLabel(data):"载入中"}</span><span>{data?.key??song.tone} 调</span><span>{data?fmt(data.duration):"--:--"}</span></p></div></div>
+        <div className="song-head"><div><span className="kicker">{song.group==="beginner"?`第 ${lessonTitleParts(song.title).number} 课`:song.group==="pop"?"流行练习":"古典钢琴"}</span><h2>{song.group==="beginner"?lessonTitleParts(song.title).title:song.title}</h2><p><span>{song.artist}</span><span>{data?tempoLabel(data):"载入中"}</span><span>{data?.key??song.tone} 调</span><span>{data?fmt(data.duration):"--:--"}</span></p></div></div>
 
         <div className="player-card">
           {data?.chords.length?<div className="chord-row"><div className="current-chord"><span>当前和弦</span><strong>{chordLabel(currentChord?.name??"N")}</strong></div>{visibleChords.map((c,i)=><button key={`${c.start}-${i}`} className={c===currentChord?"active":""} onClick={()=>seek(c.start)}><small>{fmt(c.start)}</small><strong>{chordLabel(c.name)}</strong></button>)}<div className="next-chord">下一个 <b>{chordLabel(nextChord?.name??"N")}</b></div></div>:<div className="no-chords"><span>此曲没有可靠的和弦标注，因此不显示推测结果</span></div>}
@@ -400,7 +401,7 @@ export default function Home(){
               {panel==="guide"?<>
                 {song.group==="beginner"&&beginnerGuide&&<div className="course-guide"><span className="guide-label">本课目标</span><h3>{beginnerGuide.goal}</h3><ol>{beginnerGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><div className="hand-key"><span><i className="lh"/>左手低音</span><span><i className="rh"/>右手高音</span></div></div>}
                 {song.group==="classical"&&classicalGuide&&<div className="course-guide classical-guide"><div className="piece-meta"><span><small>难度</small><b>{classicalGuide.level}</b></span><span><small>练习重点</small><b>{classicalGuide.focus}</b></span></div><ol>{classicalGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><p className="source-note">开放许可 MIDI · Mutopia Project</p></div>}
-                {song.group==="pop"&&<><div className="track-switches"><button className={melodyEnabled?"on":""} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button><button className={lyricsEnabled?"on":""} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button></div><div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>{melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}{lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}</>}
+                {song.group==="pop"&&<><div className="track-switches"><button className={`lyrics-switch ${lyricsEnabled?"on":""}`} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button><button className={`melody-switch ${melodyEnabled?"on":""}`} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button></div><div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>{melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}{lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}</>}
               </>:<div className="data-panel"><dl><div><dt>调性</dt><dd>{data?.key??song.tone}</dd></div><div><dt>速度</dt><dd>{data?tempoDetail(data):"--"}</dd></div><div><dt>时长</dt><dd>{data?fmt(data.duration):"--:--"}</dd></div><div><dt>显示音域</dt><dd>{data?`${midiName(data.displayMin)}–${midiName(data.displayMax)}`:"--"}</dd></div><div><dt>有效音轨</dt><dd>{data?.tracks??0}</dd></div><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>{song.source==="midi"?"按原始音轨":"C4 分区"}</dd></div></dl><p>速度采用 MIDI 速度段的加权中位值，范围忽略极短的瞬时变化；键盘按当前曲目的完整实际音域生成，不再截断古典低音或高音。</p></div>}
             </aside>
 
