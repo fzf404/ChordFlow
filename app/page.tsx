@@ -86,20 +86,20 @@ const catalog:CatalogSong[] = [
 
   {id:"lesson-keys",title:"第 01 课 · 键盘与中央 C",artist:"定位练习",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:72,lesson:[60,60,62,60,59,60,64,60]},
   {id:"lesson-five",title:"第 02 课 · 右手五指与手型",artist:"C–G 五指练习",tone:"C",color:"#93e6ff",group:"beginner",source:"lesson",lessonBpm:76,lesson:[60,62,64,65,67,65,64,62,60]},
-  {id:"lesson-rhythm",title:"第 03 课 · 节拍与音符时值",artist:"跟拍实操",tone:"C",color:"#ffad7b",group:"beginner",source:"lesson",lessonBpm:72,lesson:[60,60,62,62,64,64,65,64,62,60]},
-  {id:"lesson-ode",title:"第 04 课 · 实弹《欢乐颂》",artist:"右手旋律",tone:"C",color:"#82d8a5",group:"beginner",source:"lesson",lessonBpm:84,lesson:[64,64,65,67,67,65,64,62,60,60,62,64,64,62,62]},
+  {id:"lesson-left",title:"第 03 课 · 左手五指与手型",artist:"C–G 五指练习",tone:"C",color:"#ffad7b",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,50,52,53,55,53,52,50,48]},
+  {id:"lesson-rhythm",title:"第 04 课 · 节拍与音符时值",artist:"跟拍实操",tone:"C",color:"#82d8a5",group:"beginner",source:"lesson",lessonBpm:72,lesson:[60,60,62,62,64,64,65,64,62,60]},
   {id:"lesson-twinkle",title:"第 05 课 · 实弹《小星星》",artist:"右手换指",tone:"C",color:"#f0bc83",group:"beginner",source:"lesson",lessonBpm:80,lesson:[60,60,67,67,69,69,67,65,65,64,64,62,62,60]},
   {id:"lesson-scale",title:"第 06 课 · C 大调音阶",artist:"穿指与八度",tone:"C",color:"#78d7ba",group:"beginner",source:"lesson",lessonBpm:76,lesson:[60,62,64,65,67,69,71,72,71,69,67,65,64,62,60]},
   {id:"lesson-left-bass",title:"第 07 课 · 左手低音伴奏",artist:"根音与稳定拍点",tone:"C",color:"#78d4d1",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,48,55,55,45,45,53,53,48,55,48]},
   {id:"lesson-chords",title:"第 08 课 · 三个基础和弦",artist:"C / F / G",tone:"C",color:"#ffd37c",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,52,55,53,57,60,55,59,62,48,52,55]},
   {id:"lesson-progression",title:"第 09 课 · 流行和弦进行",artist:"C / G / Am / F",tone:"C",color:"#9fc4ff",group:"beginner",source:"lesson",lessonBpm:76,lesson:[48,52,55,55,59,62,45,48,52,53,57,60]},
   {id:"lesson-broken",title:"第 10 课 · 分解和弦伴奏",artist:"常用左手型",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lessonBpm:80,lesson:[48,52,55,52,43,47,50,47,45,48,52,48,41,45,48,45]},
-  {id:"lesson-twinkle-hands",title:"第 11 课 · 双手《小星星》",artist:"低音与旋律配合",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,60,48,60,55,67,55,67,45,69,45,69,48,67,53,65,53,65,48,64,48,64,55,62,55,62,48,60]},
-  {id:"lesson-birthday",title:"第 12 课 · 实弹《生日快乐》",artist:"三拍子旋律",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lessonBpm:90,lesson:[67,67,69,67,72,71,67,67,69,67,74,72,67,67,79,76,72,71,69,77,77,76,72,74,72]},
-  {id:"lesson-sight",title:"第 13 课 · 八小节视奏挑战",artist:"看谱不停顿",tone:"C",color:"#c7a4ee",group:"beginner",source:"lesson",lessonBpm:68,lesson:[60,62,64,60,65,64,62,60,62,64,65,67,65,64,62,60]},
+  {id:"lesson-coordination",title:"第 11 课 · 双手协调入门",artist:"同向五指练习",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lessonBpm:68,lesson:[48,60,50,62,52,64,53,65,55,67,53,65,52,64,50,62,48,60]},
+  {id:"lesson-twinkle-hands",title:"第 12 课 · 双手《小星星》",artist:"低音与旋律配合",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,60,48,60,55,67,55,67,45,69,45,69,48,67,53,65,53,65,48,64,48,64,55,62,55,62,48,60]},
+  {id:"lesson-birthday",title:"第 13 课 · 双手《生日快乐》",artist:"三拍子伴奏",tone:"C",color:"#c7a4ee",group:"beginner",source:"lesson",lessonBpm:84,lesson:[48,67,48,67,48,69,48,67,48,72,55,71,55,67,55,67,55,69,55,67,55,74,48,72,48,67,48,67,48,79,48,76,48,72,55,71,55,69,53,77,53,77,53,76,55,72,55,74,48,72]},
   {id:"lesson-ode-hands",title:"第 14 课 · 双手《欢乐颂》",artist:"旋律与根音伴奏",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,64,48,64,53,65,48,67,48,67,53,65,48,64,55,62,48,60,48,60,55,62,48,64,48,64,55,62,55,62]},
-  {id:"lesson-canon",title:"第 15 课 · 卡农和弦实操",artist:"C / G / Am / Em / F",tone:"C",color:"#ef9fb4",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,52,55,55,59,62,45,48,52,52,55,59,53,57,60,48,52,55,53,57,60,55,59,62]},
-  {id:"lesson-piece",title:"第 16 课 · 实弹《奇异恩典》",artist:"旋律综合",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:68,lesson:[67,72,76,72,76,74,72,69,67,67,72,76,72,76,74,79,76,79,76,72,67,72,76,72,76,74,72]},
+  {id:"lesson-canon",title:"第 15 课 · 双手卡农和弦",artist:"低音与和弦连接",tone:"C",color:"#ef9fb4",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,60,64,67,43,59,62,67,45,60,64,69,40,59,64,67,41,60,65,69,48,60,64,67,41,60,65,69,43,59,62,67]},
+  {id:"lesson-piece",title:"第 16 课 · 双手《奇异恩典》",artist:"完整综合演奏",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:68,lesson:[55,67,48,72,48,76,48,72,48,76,55,74,48,72,53,69,55,67,55,67,48,72,48,76,48,72,48,76,55,74,55,79,48,76,55,79,48,76,48,72,55,67,48,72,48,76,48,72,48,76,55,74,48,72]},
 
   {id:"classical-prelude-c",title:"C 大调前奏曲",artist:"巴赫 · BWV 846",tone:"C",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/bach-prelude-c-major.mid"},
   {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
@@ -185,6 +185,7 @@ const beginnerGuides:Record<string,{goal:string;steps:string[]}>= {
 const practicalGuides:Record<string,{goal:string;steps:string[]}>= {
   "lesson-keys":{goal:"认识键盘结构，让中央 C 始终回到视野中央",steps:["从两颗黑键左侧找到 C","用右手拇指反复确认位置","移开视线后再独立找回中央 C"]},
   "lesson-five":{goal:"建立放松、稳定的右手五指手型",steps:["五指自然落在 C 到 G","手腕与指关节保持放松","慢速上下行，保持音量均匀"]},
+  "lesson-left":{goal:"让左手五指独立、稳定地控制低音区",steps:["左手小指落在低音 C","保持手腕水平并放松","上下行时每个音力度一致"]},
   "lesson-rhythm":{goal:"用身体感受稳定拍点和长短时值",steps:["先拍手数出四拍","跟随落键区分长音和短音","不看琴键也能保持稳定速度"]},
   "lesson-ode":{goal:"完成第一首可辨认的右手旋律",steps:["先唱出《欢乐颂》开头","四小节一组慢速练习","连起来弹时保持乐句不断"]},
   "lesson-twinkle":{goal:"通过熟悉旋律练习五度跳进与换指",steps:["先找出 C 和 G 两个位置","跳进前提前移动手型","重复乐句保持相同触键"]},
@@ -193,12 +194,12 @@ const practicalGuides:Record<string,{goal:string;steps:string[]}>= {
   "lesson-chords":{goal:"认识并同时弹下 C、F、G 三个基础和弦",steps:["先看顶部和弦名称","同色音符要同时落键","切换前提前准备下一个手型"]},
   "lesson-progression":{goal:"弹出大量流行歌曲常用的 C–G–Am–F 进行",steps:["先逐个固定四个手型","观察共同音减少移动","循环四组并听清和声方向"]},
   "lesson-broken":{goal:"把柱式和弦变成流动的左手伴奏",steps:["每四个音看作一组","保持指序和音量均匀","组与组之间不要停顿"]},
-  "lesson-twinkle-hands":{goal:"第一次把左手低音与完整旋律组合起来",steps:["先分别练熟左右手","绿色低音交给左手","从 0.5× 开始两手合奏"]},
-  "lesson-birthday":{goal:"在三拍子中完整演奏熟悉旋律",steps:["先数出一二三的律动","同音重复也要保持拍点","句尾稍微放松形成呼吸"]},
-  "lesson-sight":{goal:"视奏一段陌生乐句，中途不停顿",steps:["开始前看清最高和最低音","眼睛始终比手领先一到两个音","弹错先继续，结束后再纠正"]},
+  "lesson-coordination":{goal:"第一次让左右手在同一拍整齐落键",steps:["先分别弹熟两手五指音型","观察成对音符必须同时到线","保持两手力度平衡，不抢拍"]},
+  "lesson-twinkle-hands":{goal:"用左手低音支撑完整的右手旋律",steps:["先分别练熟左右手","绿色低音交给左手","从 0.5× 开始两手合奏"]},
+  "lesson-birthday":{goal:"用左手根音为三拍子旋律伴奏",steps:["先只弹左手找到和声变化","右手保持弱起节奏准确","合手后让旋律比低音更突出"]},
   "lesson-ode-hands":{goal:"为《欢乐颂》加入左手根音伴奏",steps:["先唱旋律并只弹左手","认清左右手不同颜色","合手时让旋律始终更突出"]},
-  "lesson-canon":{goal:"用卡农和弦进行练习连续伴奏",steps:["把每三个音作为一个和弦","先确认低音的走向","循环时保持速度和力度稳定"]},
-  "lesson-piece":{goal:"综合节拍、换指和乐句完成一首完整小曲",steps:["先按乐句分段练习","困难跳进单独重复三次","最后不间断演奏《奇异恩典》"]},
+  "lesson-canon":{goal:"同时控制左手低音与右手和弦转位",steps:["绿色单音由左手负责","蓝色三音和弦由右手同时弹下","关注共同音，让和弦连接更平稳"]},
+  "lesson-piece":{goal:"综合双手、节拍和乐句完成结课演奏",steps:["先分别练熟低音与旋律","困难跳进单独重复三次","最后不间断演奏《奇异恩典》"]},
 };
 
 const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>= {
@@ -239,13 +240,15 @@ const lessonRhythms:Record<string,number[]>={
   "lesson-scale":Array(15).fill(.5),
   "lesson-left-bass":Array(11).fill(1),
   "lesson-broken":Array(16).fill(.5),
+  "lesson-coordination":Array(9).fill(1),
+  "lesson-twinkle-hands":[1,1,1,1,1,1,2,1,1,1,1,1,1,2],
   "lesson-birthday":[.75,.25,1,1,1,2,.75,.25,1,1,1,2,.75,.25,1,1,1,1,2,.75,.25,1,1,1,2],
-  "lesson-sight":Array(16).fill(.75),
+  "lesson-ode-hands":[1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2],
   "lesson-piece":[.5,1,2,.5,1,2,1,1,2,.5,1,2,.5,1,2,1,1,2,1,1,2,.5,1,2,.5,1,3],
 };
-const rightHandLessons=new Set(["lesson-keys","lesson-five","lesson-rhythm","lesson-ode","lesson-twinkle","lesson-scale","lesson-birthday","lesson-sight","lesson-piece"]);
-const leftHandLessons=new Set(["lesson-left-bass","lesson-chords","lesson-progression","lesson-broken","lesson-canon"]);
-const pairedHandLessons=new Set(["lesson-twinkle-hands","lesson-ode-hands"]);
+const rightHandLessons=new Set(["lesson-keys","lesson-five","lesson-rhythm","lesson-twinkle","lesson-scale"]);
+const leftHandLessons=new Set(["lesson-left","lesson-left-bass","lesson-chords","lesson-progression","lesson-broken"]);
+const pairedHandLessons=new Set(["lesson-coordination","lesson-twinkle-hands","lesson-birthday","lesson-ode-hands","lesson-piece"]);
 
 export default function Home(){
   const [songIndex,setSongIndex]=useState(()=>catalog.findIndex(item=>item.group==="beginner"));
@@ -313,14 +316,16 @@ export default function Home(){
         const lessonBpm=song.lessonBpm??84,beatSeconds=60/lessonBpm;
         const lessonChordNames:Record<string,string[]>={"lesson-chords":["C","F","G","C"],"lesson-progression":["C","G","Am","F"],"lesson-canon":["C","G","Am","Em","F","C","F","G"]};
         const chordNames=lessonChordNames[song.id]??[];
-        const chordLesson=chordNames.length>0;
+        const chordLesson=chordNames.length>0,chordSize=song.id==="lesson-canon"?4:3;
         const pairedLesson=pairedHandLessons.has(song.id),rhythm=lessonRhythms[song.id]??[];
+        const pairStarts:number[]=[];let pairBeatCursor=0;
+        if(pairedLesson)for(let pair=0;pair<Math.ceil(sequence.length/2);pair++){pairStarts[pair]=pairBeatCursor;pairBeatCursor+=rhythm[pair]??1}
         let beatCursor=0;
         const notes:PianoNote[]=sequence.map((midi,index)=>{
-          const beats=rhythm[index]??1;
-          const time=chordLesson?Math.floor(index/3)*2*beatSeconds:pairedLesson?Math.floor(index/2)*beatSeconds:beatCursor*beatSeconds;
+          const pairIndex=Math.floor(index/2),beats=pairedLesson?(rhythm[pairIndex]??1):(rhythm[index]??1);
+          const time=chordLesson?Math.floor(index/chordSize)*2*beatSeconds:pairedLesson?pairStarts[pairIndex]*beatSeconds:beatCursor*beatSeconds;
           if(!chordLesson&&!pairedLesson)beatCursor+=beats;
-          const hand:"left"|"right"=rightHandLessons.has(song.id)?"right":leftHandLessons.has(song.id)?"left":pairedLesson?(index%2===0?"left":"right"):(midi<60?"left":"right");
+          const hand:"left"|"right"=song.id==="lesson-canon"?(index%chordSize===0?"left":"right"):rightHandLessons.has(song.id)?"right":leftHandLessons.has(song.id)?"left":pairedLesson?(index%2===0?"left":"right"):(midi<60?"left":"right");
           return{midi,name:midiName(midi),time,duration:(chordLesson?1.65:(pairedLesson?0.88:Math.max(.35,beats*.88)))*beatSeconds,velocity:hand==="right"?.74:.68,hand};
         });
         const displayChordNames=chordLesson?chordNames:song.id==="lesson-broken"?["C","G","Am","F"]:[];
