@@ -95,11 +95,11 @@ const catalog:CatalogSong[] = [
   {id:"lesson-progression",title:"第 09 课 · 流行和弦进行",artist:"C / G / Am / F",tone:"C",color:"#9fc4ff",group:"beginner",source:"lesson",lessonBpm:76,lesson:[48,52,55,55,59,62,45,48,52,53,57,60]},
   {id:"lesson-broken",title:"第 10 课 · 分解和弦伴奏",artist:"常用左手型",tone:"C",color:"#90b4ff",group:"beginner",source:"lesson",lessonBpm:80,lesson:[48,52,55,52,43,47,50,47,45,48,52,48,41,45,48,45]},
   {id:"lesson-twinkle-hands",title:"第 11 课 · 双手《小星星》",artist:"低音与旋律配合",tone:"C",color:"#c9a4ff",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,60,48,60,55,67,55,67,45,69,45,69,48,67,53,65,53,65,48,64,48,64,55,62,55,62,48,60]},
-  {id:"lesson-birthday",title:"第 12 课 · 实弹《生日快乐》",artist:"三拍子旋律",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lessonBpm:90,lesson:[55,55,57,55,60,59,55,55,57,55,62,60,55,55,67,64,60,59,57,65,65,64,60,62,60]},
+  {id:"lesson-birthday",title:"第 12 课 · 实弹《生日快乐》",artist:"三拍子旋律",tone:"C",color:"#e49be6",group:"beginner",source:"lesson",lessonBpm:90,lesson:[67,67,69,67,72,71,67,67,69,67,74,72,67,67,79,76,72,71,69,77,77,76,72,74,72]},
   {id:"lesson-sight",title:"第 13 课 · 八小节视奏挑战",artist:"看谱不停顿",tone:"C",color:"#c7a4ee",group:"beginner",source:"lesson",lessonBpm:68,lesson:[60,62,64,60,65,64,62,60,62,64,65,67,65,64,62,60]},
-  {id:"lesson-ode-hands",title:"第 14 课 · 双手《欢乐颂》",artist:"旋律与根音伴奏",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,64,48,64,53,65,55,67,55,67,53,65,48,64,55,62,48,60,48,60,55,62,48,64]},
+  {id:"lesson-ode-hands",title:"第 14 课 · 双手《欢乐颂》",artist:"旋律与根音伴奏",tone:"C",color:"#ffd16f",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,64,48,64,53,65,48,67,48,67,53,65,48,64,55,62,48,60,48,60,55,62,48,64,48,64,55,62,55,62]},
   {id:"lesson-canon",title:"第 15 课 · 卡农和弦实操",artist:"C / G / Am / Em / F",tone:"C",color:"#ef9fb4",group:"beginner",source:"lesson",lessonBpm:72,lesson:[48,52,55,55,59,62,45,48,52,52,55,59,53,57,60,48,52,55,53,57,60,55,59,62]},
-  {id:"lesson-piece",title:"第 16 课 · 完整曲《奇异恩典》",artist:"综合演奏",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:68,lesson:[55,60,64,60,64,62,60,57,55,55,60,64,60,64,62,67,64,67,64,60,55,60,64,60,64,62,60]},
+  {id:"lesson-piece",title:"第 16 课 · 实弹《奇异恩典》",artist:"旋律综合",tone:"C",color:"#d8ff62",group:"beginner",source:"lesson",lessonBpm:68,lesson:[67,72,76,72,76,74,72,69,67,67,72,76,72,76,74,79,76,79,76,72,67,72,76,72,76,74,72]},
 
   {id:"classical-prelude-c",title:"C 大调前奏曲",artist:"巴赫 · BWV 846",tone:"C",color:"#9bb5eb",group:"classical",source:"midi",midi:"/data/classical/bach-prelude-c-major.mid"},
   {id:"classical-invention",title:"C 大调二部创意曲",artist:"巴赫 · BWV 772",tone:"C",color:"#e0c27b",group:"classical",source:"midi",midi:"/data/classical/bach-invention-1.mid"},
@@ -232,6 +232,21 @@ const addedClassicalGuides:Record<string,{level:string;focus:string;steps:string
   "classical-rach-prelude":{level:"高级",focus:"钟声和弦与宏大层次",steps:["和弦先找到放松的落键方式","中段三连音保持稳健推进","高潮以重量而非僵硬力量完成"]},
 };
 
+const lessonRhythms:Record<string,number[]>={
+  "lesson-rhythm":[1,1,.5,.5,1,1,.5,.5,2,2],
+  "lesson-ode":[1,1,1,1,1,1,1,1,1,1,1,1,1.5,.5,2],
+  "lesson-twinkle":[1,1,1,1,1,1,2,1,1,1,1,1,1,2],
+  "lesson-scale":Array(15).fill(.5),
+  "lesson-left-bass":Array(11).fill(1),
+  "lesson-broken":Array(16).fill(.5),
+  "lesson-birthday":[.75,.25,1,1,1,2,.75,.25,1,1,1,2,.75,.25,1,1,1,1,2,.75,.25,1,1,1,2],
+  "lesson-sight":Array(16).fill(.75),
+  "lesson-piece":[.5,1,2,.5,1,2,1,1,2,.5,1,2,.5,1,2,1,1,2,1,1,2,.5,1,2,.5,1,3],
+};
+const rightHandLessons=new Set(["lesson-keys","lesson-five","lesson-rhythm","lesson-ode","lesson-twinkle","lesson-scale","lesson-birthday","lesson-sight","lesson-piece"]);
+const leftHandLessons=new Set(["lesson-left-bass","lesson-chords","lesson-progression","lesson-broken","lesson-canon"]);
+const pairedHandLessons=new Set(["lesson-twinkle-hands","lesson-ode-hands"]);
+
 export default function Home(){
   const [songIndex,setSongIndex]=useState(()=>catalog.findIndex(item=>item.group==="beginner"));
   const [group,setGroup]=useState<Group>("beginner");
@@ -295,16 +310,24 @@ export default function Home(){
       setLoading(true);setPlaying(false);setCurrentTime(0);playedRef.current.clear();
       if(song.source==="lesson"){
         const sequence=song.lesson??[];
+        const lessonBpm=song.lessonBpm??84,beatSeconds=60/lessonBpm;
         const lessonChordNames:Record<string,string[]>={"lesson-chords":["C","F","G","C"],"lesson-progression":["C","G","Am","F"],"lesson-canon":["C","G","Am","Em","F","C","F","G"]};
         const chordNames=lessonChordNames[song.id]??[];
         const chordLesson=chordNames.length>0;
-        const notes:PianoNote[]=sequence.map((midi,index)=>({midi,name:midiName(midi),time:chordLesson?Math.floor(index/3)*1.8:index*.72,duration:chordLesson?1.35:.56,velocity:.72,hand:midi<60?"left":"right"}));
+        const pairedLesson=pairedHandLessons.has(song.id),rhythm=lessonRhythms[song.id]??[];
+        let beatCursor=0;
+        const notes:PianoNote[]=sequence.map((midi,index)=>{
+          const beats=rhythm[index]??1;
+          const time=chordLesson?Math.floor(index/3)*2*beatSeconds:pairedLesson?Math.floor(index/2)*beatSeconds:beatCursor*beatSeconds;
+          if(!chordLesson&&!pairedLesson)beatCursor+=beats;
+          const hand:"left"|"right"=rightHandLessons.has(song.id)?"right":leftHandLessons.has(song.id)?"left":pairedLesson?(index%2===0?"left":"right"):(midi<60?"left":"right");
+          return{midi,name:midiName(midi),time,duration:(chordLesson?1.65:(pairedLesson?0.88:Math.max(.35,beats*.88)))*beatSeconds,velocity:hand==="right"?.74:.68,hand};
+        });
         const displayChordNames=chordLesson?chordNames:song.id==="lesson-broken"?["C","G","Am","F"]:[];
-        const chordSpan=chordLesson?1.8:2.88;
+        const chordSpan=2*beatSeconds;
         const chords=displayChordNames.map((name,index)=>({start:index*chordSpan,end:(index+1)*chordSpan,name}));
-        const duration=Math.max(6,(notes.at(-1)?.time??0)+(chordLesson?1.8:1.1));
+        const duration=Math.max(6,...notes.map(note=>note.time+note.duration))+beatSeconds*.25;
         const [displayMin,displayMax]=displayRange(notes,song.group);
-        const lessonBpm=song.lessonBpm??84;
         if(!cancelled)setData({duration,bpm:lessonBpm,tempoMin:lessonBpm,tempoMax:lessonBpm,tempoChanges:1,key:song.tone,tracks:1,displayMin,displayMax,notes,melody:[],chords});
         if(!cancelled)setLoading(false);return;
       }
