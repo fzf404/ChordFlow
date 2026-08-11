@@ -126,7 +126,7 @@ const catalog:CatalogSong[] = [
 void legacyCatalog;
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const FULL_MIN_MIDI=21, FULL_MAX_MIDI=108;
-const ROLL_WINDOW=4.2,ROLL_HIT=96;
+const ROLL_WINDOW=4.2,ROLL_HIT=98;
 const SAMPLE_MIDIS=[33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
 const sampleFile=(m:number)=>`${NOTE_NAMES[m%12].replace("#","%23")}${Math.floor(m/12)-1}v6.mp3`;
 const nearestSample=(m:number)=>SAMPLE_MIDIS.reduce((best,n)=>Math.abs(n-m)<Math.abs(best-m)?n:best,SAMPLE_MIDIS[0]);
@@ -367,7 +367,7 @@ export default function Home(){
   const blackMidis=useMemo(()=>Array.from({length:keyboardMax-keyboardMin+1},(_,i)=>keyboardMin+i).filter(isBlack),[keyboardMin,keyboardMax]);
   const keyX=useCallback((m:number)=>{const whiteIndex=whiteMidis.indexOf(m);if(whiteIndex>=0)return(whiteIndex+.5)/whiteMidis.length;return whiteMidis.filter(w=>w<m).length/whiteMidis.length},[whiteMidis]);
   const noteWidth=Math.min(4,80/whiteMidis.length),blackKeyWidth=Math.min(2.8,62/whiteMidis.length);
-  const soundingKeys=useMemo(()=>{const keys=new Set(activeKeys);visibleNotes.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-${n.hand}`)});visibleMelody.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-right`)});return keys},[activeKeys,visibleNotes,visibleMelody,currentTime]);
+  const soundingKeys=useMemo(()=>{const keys=new Set(activeKeys);visibleNotes.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-${n.hand}`)});visibleMelody.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-melody`)});return keys},[activeKeys,visibleNotes,visibleMelody,currentTime]);
   const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
   const beginnerGuide=practicalGuides[song.id]??beginnerGuides[song.id];
   const classicalGuide=addedClassicalGuides[song.id]??classicalGuides[song.id];
@@ -413,7 +413,7 @@ export default function Home(){
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
-                <div className="real-piano">{whiteMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`${keyX(m)*100}%`,width:`${blackKeyWidth}%`,transform:"translateX(-50%)"}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
+                <div className="real-piano">{whiteMidis.map(m=>{const hand=soundingKeys.has(`${m}-melody`)?"melody":soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=soundingKeys.has(`${m}-melody`)?"melody":soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`${keyX(m)*100}%`,width:`${blackKeyWidth}%`,transform:"translateX(-50%)"}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
               </div>
             </div>
           </div>
