@@ -7,7 +7,7 @@ type Group = "pop"|"beginner"|"classical";
 type CatalogSong = { id:string; title:string; artist:string; tone:string; color:string; group:Group; source:"pop909"|"midi"|"lesson"; midi?:string; lesson?:number[] };
 type PianoNote = { midi:number; name:string; time:number; duration:number; velocity:number; hand:"left"|"right" };
 type ChordMark = { start:number; end:number; name:string };
-type SongData = { duration:number; bpm:number; tempoMin:number; tempoMax:number; tempoChanges:number; key:string; tracks:number; notes:PianoNote[]; melody:PianoNote[]; chords:ChordMark[] };
+type SongData = { duration:number; bpm:number; tempoMin:number; tempoMax:number; tempoChanges:number; key:string; tracks:number; displayMin:number; displayMax:number; notes:PianoNote[]; melody:PianoNote[]; chords:ChordMark[] };
 const noteIds=new WeakMap<PianoNote,string>();let nextNoteId=0;
 const noteKey=(note:PianoNote)=>{let id=noteIds.get(note);if(!id){id=`note-${nextNoteId++}`;noteIds.set(note,id)}return id};
 
@@ -51,13 +51,9 @@ const catalog:CatalogSong[] = [
   {id:"classical-handel",title:"小奏鸣曲",artist:"亨德尔",tone:"G",color:"#e6a774",group:"classical",source:"midi",midi:"/data/classical/handel-sonatina.mid"},
   {id:"classical-schumann",title:"旋律",artist:"舒曼 · Op.68 No.1",tone:"C",color:"#e99fb2",group:"classical",source:"midi",midi:"/data/classical/schumann-melody.mid"},
   {id:"classical-arabesque",title:"阿拉贝斯克",artist:"布格缪勒 · Op.100 No.2",tone:"Am",color:"#b39fea",group:"classical",source:"midi",midi:"/data/classical/burgmuller-arabesque.mid"},
-  {id:"classical-moonlight-1",title:"月光奏鸣曲 · 第一乐章",artist:"贝多芬 · Op.27 No.2",tone:"C#m",color:"#869be8",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-1.mid"},
-  {id:"classical-moonlight-2",title:"月光奏鸣曲 · 第二乐章",artist:"贝多芬 · Op.27 No.2",tone:"Db",color:"#9ca9ea",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-2.mid"},
-  {id:"classical-moonlight-3",title:"月光奏鸣曲 · 第三乐章",artist:"贝多芬 · Op.27 No.2",tone:"C#m",color:"#727fdd",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-3.mid"},
-  {id:"classical-pathetique-1",title:"悲怆奏鸣曲 · 第一乐章",artist:"贝多芬 · Op.13",tone:"Cm",color:"#e0b18c",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-1.mid"},
-  {id:"classical-pathetique-2",title:"悲怆奏鸣曲 · 第二乐章",artist:"贝多芬 · Op.13",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
-  {id:"classical-pathetique-3",title:"悲怆奏鸣曲 · 第三乐章",artist:"贝多芬 · Op.13",tone:"Cm",color:"#c88e78",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-3.mid"},
-  {id:"classical-k545",title:"C 大调奏鸣曲 · 第一乐章",artist:"莫扎特 · K.545",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
+  {id:"classical-moonlight-1",title:"月光奏鸣曲",artist:"贝多芬 · Op.27 No.2",tone:"C#m",color:"#869be8",group:"classical",source:"midi",midi:"/data/classical/beethoven-moonlight-1.mid"},
+  {id:"classical-pathetique-2",title:"悲怆奏鸣曲",artist:"贝多芬 · Op.13",tone:"Ab",color:"#d6a983",group:"classical",source:"midi",midi:"/data/classical/beethoven-pathetique-2.mid"},
+  {id:"classical-k545",title:"C 大调奏鸣曲",artist:"莫扎特 · K.545",tone:"C",color:"#8fdcc2",group:"classical",source:"midi",midi:"/data/classical/mozart-k545.mid"},
   {id:"classical-funeral",title:"C 小调葬礼进行曲",artist:"莫扎特 · K.453a",tone:"Cm",color:"#9f9ca8",group:"classical",source:"midi",midi:"/data/classical/mozart-funeral-march.mid"},
   {id:"classical-prelude-e",title:"E 小调前奏曲",artist:"肖邦 · Op.28 No.4",tone:"Em",color:"#c899aa",group:"classical",source:"midi",midi:"/data/classical/chopin-prelude-e-minor.mid"},
   {id:"classical-nocturne",title:"降 E 大调夜曲",artist:"肖邦 · Op.9 No.2",tone:"Eb",color:"#b5a2df",group:"classical",source:"midi",midi:"/data/classical/chopin-nocturne-op9-2.mid"},
@@ -67,23 +63,26 @@ const catalog:CatalogSong[] = [
   {id:"classical-brahms-intermezzo",title:"A 大调间奏曲",artist:"勃拉姆斯 · Op.118 No.2",tone:"A",color:"#c69dac",group:"classical",source:"midi",midi:"/data/classical/brahms-intermezzo-op118-2.mid"},
   {id:"classical-clair-de-lune",title:"月光",artist:"德彪西 · 贝加马斯克组曲",tone:"Db",color:"#88aee0",group:"classical",source:"midi",midi:"/data/classical/debussy-clair-de-lune.mid"},
   {id:"classical-scriabin-prelude",title:"C 大调前奏曲",artist:"斯克里亚宾 · Op.11 No.1",tone:"C",color:"#b091d3",group:"classical",source:"midi",midi:"/data/classical/scriabin-prelude-op11-1.mid"},
-  {id:"classical-clementi",title:"C 大调小奏鸣曲 · 第一乐章",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
+  {id:"classical-clementi",title:"C 大调小奏鸣曲",artist:"克莱门蒂 · Op.36 No.1",tone:"C",color:"#8fcdb5",group:"classical",source:"midi",midi:"/data/classical/clementi-sonatina-op36-1.mid"},
 ];
 
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
-const MIN_MIDI=36, MAX_MIDI=96;
+const FULL_MIN_MIDI=21, FULL_MAX_MIDI=108;
 const ROLL_WINDOW=4.2,ROLL_HIT=96;
 const SAMPLE_MIDIS=[33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
 const sampleFile=(m:number)=>`${NOTE_NAMES[m%12].replace("#","%23")}${Math.floor(m/12)-1}v6.mp3`;
 const nearestSample=(m:number)=>SAMPLE_MIDIS.reduce((best,n)=>Math.abs(n-m)<Math.abs(best-m)?n:best,SAMPLE_MIDIS[0]);
-const whiteMidis=Array.from({length:MAX_MIDI-MIN_MIDI+1},(_,i)=>MIN_MIDI+i).filter(m=>![1,3,6,8,10].includes(m%12));
-const blackMidis=Array.from({length:MAX_MIDI-MIN_MIDI+1},(_,i)=>MIN_MIDI+i).filter(m=>[1,3,6,8,10].includes(m%12));
 const midiName=(m:number)=>`${NOTE_NAMES[m%12]}${Math.floor(m/12)-1}`;
-const keyX=(m:number)=>{
-  const whiteIndex=whiteMidis.indexOf(m);
-  if(whiteIndex>=0)return(whiteIndex+.5)/whiteMidis.length;
-  const before=whiteMidis.filter(w=>w<m).length;
-  return before/whiteMidis.length;
+const isBlack=(m:number)=>[1,3,6,8,10].includes(m%12);
+const displayRange=(notes:PianoNote[],group:Group):[number,number]=>{
+  const pitches=notes.map(note=>note.midi);
+  let min=Math.max(FULL_MIN_MIDI,(pitches.length?Math.min(...pitches):48)-(group==="classical"?2:4));
+  let max=Math.min(FULL_MAX_MIDI,(pitches.length?Math.max(...pitches):72)+(group==="classical"?2:4));
+  min-=min%12;max+=11-max%12;
+  min=Math.max(FULL_MIN_MIDI,min);max=Math.min(FULL_MAX_MIDI,max);
+  const minimumSpan=group==="beginner"?35:group==="pop"?47:59;
+  while(max-min<minimumSpan&&(min>FULL_MIN_MIDI||max<FULL_MAX_MIDI)){if(min>FULL_MIN_MIDI)min=Math.max(FULL_MIN_MIDI,min-12);if(max-min<minimumSpan&&max<FULL_MAX_MIDI)max=Math.min(FULL_MAX_MIDI,max+12)}
+  return[min,max];
 };
 const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,"0")}`;
 const keyLabel=(raw:string)=>raw.replace(":maj","").replace(":min","m");
@@ -130,15 +129,11 @@ const classicalGuides:Record<string,{level:string;focus:string;steps:string[]}>=
   "classical-arabesque":{level:"初中级",focus:"快速音型与手腕放松",steps:["分组练习连续音型","用小幅手腕动作带动","先准确再逐步提速"]},
   "classical-k545":{level:"中级",focus:"古典奏鸣曲的均衡与颗粒感",steps:["先分别整理左右手指法","十六分音符保持均匀","合手时从 0.5× 开始"]},
   "classical-moonlight-1":{level:"中级",focus:"三连音织体与旋律层次",steps:["先单练持续三连音","高声部旋律保持歌唱性","用轻触键营造安静氛围"]},
-  "classical-moonlight-2":{level:"中级",focus:"轻盈节拍与声部平衡",steps:["保持节拍自然流动","左手不要压住旋律","句尾留出清楚呼吸"]},
-  "classical-moonlight-3":{level:"高级",focus:"快速琶音与力度控制",steps:["分组练习快速音型","保持手臂与手腕放松","从低速逐段衔接"]},
   "classical-prelude-c":{level:"初中级",focus:"分解和弦与和声流动",steps:["按和声位置分组练习","每组音型保持均匀","低音变化时提前准备手位"]},
   "classical-wtc-c-minor":{level:"中高级",focus:"连续音型与和声方向",steps:["先分组固定十六分音符指法","保持左右手交替均匀清楚","用低音与和声变化推动段落"]},
   "classical-prelude-e":{level:"初中级",focus:"和声进行与旋律呼吸",steps:["先听清左手和声变化","右手旋律保持连贯","延长音处控制自然衰减"]},
   "classical-nocturne":{level:"中高级",focus:"装饰音与夜曲式歌唱性",steps:["先略去装饰音理顺旋律","左手伴奏保持均匀","装饰音轻巧融入拍点"]},
-  "classical-pathetique-1":{level:"高级",focus:"强烈对比与快速音型",steps:["分别练习慢速引子与主题","和弦整齐有支撑","快速段落从分组慢练开始"]},
   "classical-pathetique-2":{level:"中级",focus:"歌唱性旋律与宽广伴奏",steps:["右手主题保持深连奏","左手和弦控制音量","重复乐句做出层次变化"]},
-  "classical-pathetique-3":{level:"中高级",focus:"回旋主题与轻巧触键",steps:["先固定主题指法","保持快速音符清楚均匀","主题返回时做出层次变化"]},
   "classical-invention":{level:"中级",focus:"二声部独立与模仿",steps:["分别唱出两个声部","左右手都保持清楚触键","主题进入时稍作突出"]},
   "classical-clementi":{level:"初中级",focus:"古典句法与快速音阶",steps:["划分四小节乐句","音阶指法保持稳定","伴奏轻于主旋律"]},
   "classical-funeral":{level:"中级",focus:"进行曲脉搏与沉稳音色",steps:["保持稳定而克制的速度","和弦整齐落键","强弱变化不要突然"]},
@@ -219,7 +214,8 @@ export default function Home(){
         const chordSpan=chordLesson?1.8:2.88;
         const chords=chordNames.map((name,index)=>({start:index*chordSpan,end:(index+1)*chordSpan,name}));
         const duration=Math.max(6,(notes.at(-1)?.time??0)+(chordLesson?1.8:1.1));
-        if(!cancelled)setData({duration,bpm:84,tempoMin:84,tempoMax:84,tempoChanges:1,key:song.tone,tracks:1,notes,melody:[],chords});
+        const [displayMin,displayMax]=displayRange(notes,song.group);
+        if(!cancelled)setData({duration,bpm:84,tempoMin:84,tempoMax:84,tempoChanges:1,key:song.tone,tracks:1,displayMin,displayMax,notes,melody:[],chords});
         if(!cancelled)setLoading(false);return;
       }
       const base=`/data/pop909/${song.id}`;
@@ -227,16 +223,20 @@ export default function Home(){
       const midi=new Midi(buffer);
       const piano=midi.tracks.find(t=>t.name.toUpperCase()==="PIANO")??midi.tracks.at(-1)!;
       const melody=midi.tracks.find(t=>t.name.toUpperCase()==="MELODY");
-      const mapNotes=(notes:typeof piano.notes,fixedHand?:"left"|"right"):PianoNote[]=>notes.filter(n=>n.midi>=MIN_MIDI&&n.midi<=MAX_MIDI).map(n=>({midi:n.midi,name:n.name,time:n.time,duration:n.duration,velocity:n.velocity,hand:fixedHand??(n.midi<60?"left":"right")}));
+      const mapNotes=(notes:typeof piano.notes,fixedHand?:"left"|"right"):PianoNote[]=>notes.filter(n=>n.midi>=FULL_MIN_MIDI&&n.midi<=FULL_MAX_MIDI).map(n=>({midi:n.midi,name:n.name,time:n.time,duration:n.duration,velocity:n.velocity,hand:fixedHand??(n.midi<60?"left":"right")}));
       const chords=chordText.trim()?chordText.trim().split(/\r?\n/).map(line=>{const [start,end,name]=line.split(/\s+/);return{start:Number(start),end:Number(end),name};}):[];
       const noteTracks=midi.tracks.filter(track=>track.notes.length>0);
-      const tempos=midi.header.tempos.map(tempo=>tempo.bpm).filter(Number.isFinite);
-      const initialTempo=tempos[0]??72;
+      const tempoEvents=midi.header.tempos.filter(tempo=>Number.isFinite(tempo.bpm));
+      const tempoSegments=tempoEvents.map((tempo,index)=>({bpm:tempo.bpm,weight:Math.max(.01,(tempoEvents[index+1]?.time??midi.duration)-(tempo.time??0))}));
+      const weightedTempo=(quantile:number)=>{const sorted=[...tempoSegments].sort((a,b)=>a.bpm-b.bpm),target=sorted.reduce((sum,item)=>sum+item.weight,0)*quantile;let total=0;for(const item of sorted){total+=item.weight;if(total>=target)return item.bpm}return sorted.at(-1)?.bpm??72};
+      const representativeTempo=weightedTempo(.5),tempoMin=weightedTempo(.05),tempoMax=weightedTempo(.95);
       const detectedKey=keyText.trim()?keyLabel(keyText.trim().split(/\r?\n/).map(line=>line.trim().split(/\s+/)).sort((a,b)=>(Number(b[1])-Number(b[0]))-(Number(a[1])-Number(a[0])))[0]?.[2]??song.tone):song.tone;
       const trackAverages=noteTracks.map(track=>track.notes.reduce((sum,note)=>sum+note.midi,0)/track.notes.length);
       const handSplit=trackAverages.length>1?(Math.min(...trackAverages)+Math.max(...trackAverages))/2:60;
       const pianoNotes=song.source==="midi"?noteTracks.flatMap((track,index)=>mapNotes(track.notes,noteTracks.length>1?(trackAverages[index]>=handSplit?"right":"left"):undefined)).sort((a,b)=>a.time-b.time):mapNotes(piano?.notes??[]);
-      if(!cancelled)setData({duration:midi.duration,bpm:initialTempo,tempoMin:Math.min(...tempos,initialTempo),tempoMax:Math.max(...tempos,initialTempo),tempoChanges:tempos.length,key:detectedKey,tracks:noteTracks.length,notes:pianoNotes,melody:song.source==="midi"?[]:mapNotes(melody?.notes??[]),chords});
+      const melodyNotes=song.source==="midi"?[]:mapNotes(melody?.notes??[]);
+      const [displayMin,displayMax]=displayRange([...pianoNotes,...melodyNotes],song.group);
+      if(!cancelled)setData({duration:midi.duration,bpm:representativeTempo,tempoMin,tempoMax,tempoChanges:tempoEvents.length,key:detectedKey,tracks:noteTracks.length,displayMin,displayMax,notes:pianoNotes,melody:melodyNotes,chords});
       if(!cancelled)setLoading(false);
     }
     load();return()=>{cancelled=true};
@@ -273,6 +273,11 @@ export default function Home(){
   const nextChord=data?.chords.find(c=>c.start>(currentChord?.start??currentTime));
   const visibleNotes=useMemo(()=>data?notesInRoll(data.notes,currentTime,160):[],[data,currentTime]);
   const visibleMelody=useMemo(()=>melodyEnabled&&data?notesInRoll(data.melody,currentTime,80):[],[data,currentTime,melodyEnabled]);
+  const keyboardMin=data?.displayMin??48,keyboardMax=data?.displayMax??83;
+  const whiteMidis=useMemo(()=>Array.from({length:keyboardMax-keyboardMin+1},(_,i)=>keyboardMin+i).filter(m=>!isBlack(m)),[keyboardMin,keyboardMax]);
+  const blackMidis=useMemo(()=>Array.from({length:keyboardMax-keyboardMin+1},(_,i)=>keyboardMin+i).filter(isBlack),[keyboardMin,keyboardMax]);
+  const keyX=useCallback((m:number)=>{const whiteIndex=whiteMidis.indexOf(m);if(whiteIndex>=0)return(whiteIndex+.5)/whiteMidis.length;return whiteMidis.filter(w=>w<m).length/whiteMidis.length},[whiteMidis]);
+  const noteWidth=Math.min(4,80/whiteMidis.length),blackKeyWidth=Math.min(2.8,62/whiteMidis.length);
   const soundingKeys=useMemo(()=>{const keys=new Set(activeKeys);visibleNotes.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-${n.hand}`)});visibleMelody.forEach(n=>{if(n.time<=currentTime+.04&&n.time+n.duration>=currentTime)keys.add(`${n.midi}-right`)});return keys},[activeKeys,visibleNotes,visibleMelody,currentTime]);
   const visibleChords=useMemo(()=>data?.chords.filter(c=>c.end>currentTime).slice(0,6)??[],[data,currentTime]);
   const beginnerGuide=beginnerGuides[song.id];
@@ -307,19 +312,19 @@ export default function Home(){
                 {song.group==="beginner"&&beginnerGuide&&<div className="course-guide"><span className="guide-label">本课目标</span><h3>{beginnerGuide.goal}</h3><ol>{beginnerGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><div className="hand-key"><span><i className="lh"/>左手低音</span><span><i className="rh"/>右手高音</span></div></div>}
                 {song.group==="classical"&&classicalGuide&&<div className="course-guide classical-guide"><div className="piece-meta"><span><small>难度</small><b>{classicalGuide.level}</b></span><span><small>练习重点</small><b>{classicalGuide.focus}</b></span></div><ol>{classicalGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><p className="source-note">开放许可 MIDI · Mutopia Project</p></div>}
                 {song.group==="pop"&&<><div className="track-switches"><button className={melodyEnabled?"on":""} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);playedRef.current.clear();setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button><button className={lyricsEnabled?"on":""} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button></div><div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>{melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}{lyricsEnabled&&<div className="lyrics-box">{lyrics.length?<><small>当前歌词</small><strong>{lyrics[Math.floor(currentTime/4)%lyrics.length]}</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong><p>请选择你拥有使用权的歌词文件。</p></>}<label>＋ 导入 LRC<input type="file" accept=".lrc,.txt" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}</>}
-              </>:<div className="data-panel"><dl><div><dt>调性</dt><dd>{data?.key??song.tone}</dd></div><div><dt>速度</dt><dd>{data?tempoDetail(data):"--"}</dd></div><div><dt>时长</dt><dd>{data?fmt(data.duration):"--:--"}</dd></div><div><dt>有效音轨</dt><dd>{data?.tracks??0}</dd></div><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>{song.source==="midi"?"按原始音轨":"C4 分区"}</dd></div></dl><p>速度、时长、音符与音轨均从当前 MIDI 实时读取；流行曲调性来自 POP909 的音频调性标注。变速曲目显示完整速度范围，而不是只取一个数值。</p></div>}
+              </>:<div className="data-panel"><dl><div><dt>调性</dt><dd>{data?.key??song.tone}</dd></div><div><dt>速度</dt><dd>{data?tempoDetail(data):"--"}</dd></div><div><dt>时长</dt><dd>{data?fmt(data.duration):"--:--"}</dd></div><div><dt>显示音域</dt><dd>{data?`${midiName(data.displayMin)}–${midiName(data.displayMax)}`:"--"}</dd></div><div><dt>有效音轨</dt><dd>{data?.tracks??0}</dd></div><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>{song.source==="midi"?"按原始音轨":"C4 分区"}</dd></div></dl><p>速度采用 MIDI 速度段的加权中位值，范围忽略极短的瞬时变化；键盘按当前曲目的完整实际音域生成，不再截断古典低音或高音。</p></div>}
             </aside>
 
             <div className="performance">
               <div className="roll-and-keys">
                 <div className="piano-roll">
                   <div className="roll-grid">{whiteMidis.map(m=><i key={m} style={{left:`${keyX(m)*100}%`}}/>)}</div><div className="hit-line"><span>现在弹</span></div>
-                  {visibleNotes.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
-                  {visibleMelody.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className="midi-note melody" style={{left:`${keyX(n.midi)*100}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleNotes.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className={`midi-note ${n.hand}`} style={{left:`${keyX(n.midi)*100}%`,width:`${noteWidth}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
+                  {visibleMelody.map(n=>{const delta=n.time-currentTime;return <div key={noteKey(n)} className="midi-note melody" style={{left:`${keyX(n.midi)*100}%`,width:`${noteWidth}%`,top:`${Math.max(0,Math.min(340,ROLL_HIT-delta/ROLL_WINDOW*ROLL_HIT))}%`,height:`max(7px, ${Math.max(.8,n.duration/ROLL_WINDOW*ROLL_HIT)}%)`}}><b>{n.name.replace(/\d/,"")}</b></div>})}
                   {loading&&<div className="loading">正在解析真实 MIDI…</div>}
                 </div>
                 <div className="keyboard-legend"><span><i className="lh"/>左手低音区</span><span><i className="rh"/>右手高音区</span><small>轨道中心与琴键中心共用同一坐标</small></div>
-                <div className="real-piano">{whiteMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`calc(${keyX(m)*100}% - 7px)`}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
+                <div className="real-piano">{whiteMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={hand?`lit ${hand}`:""} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}{blackMidis.map(m=>{const hand=soundingKeys.has(`${m}-right`)?"right":soundingKeys.has(`${m}-left`)?"left":"";return <button key={m} className={`black ${hand?`lit ${hand}`:""}`} style={{left:`${keyX(m)*100}%`,width:`${blackKeyWidth}%`,transform:"translateX(-50%)"}} onPointerDown={()=>playTone(m)}><span>{hand?midiName(m).replace(/\d/,""):""}</span></button>})}</div>
               </div>
             </div>
           </div>
