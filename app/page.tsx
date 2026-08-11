@@ -76,6 +76,7 @@ const midiName=(m:number)=>`${NOTE_NAMES[m%12]}${Math.floor(m/12)-1}`;
 const isBlack=(m:number)=>[1,3,6,8,10].includes(m%12);
 const displayRange=(notes:PianoNote[],group:Group):[number,number]=>{
   const pitches=notes.map(note=>note.midi);
+  if(group==="beginner"&&pitches.every(pitch=>pitch>=43&&pitch<=77))return[43,77];
   let min=Math.max(FULL_MIN_MIDI,(pitches.length?Math.min(...pitches):48)-(group==="classical"?2:4));
   let max=Math.min(FULL_MAX_MIDI,(pitches.length?Math.max(...pitches):72)+(group==="classical"?2:4));
   min-=min%12;max+=11-max%12;
