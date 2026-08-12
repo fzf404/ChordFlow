@@ -8,7 +8,7 @@ const display = Outfit({ variable: "--font-display", subsets: ["latin"], weight:
 export const metadata: Metadata = {
   title: "ChordFlow — 看见和弦，轻松弹琴",
   description: "为钢琴初学者设计的可视化和弦练习室。",
-  icons: { icon: "/icon.png", shortcut: "/icon.png", apple: "/apple-icon.png" },
+  icons: { icon: "/chordflow-icon.png", shortcut: "/chordflow-icon.png", apple: "/chordflow-apple-icon.png" },
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
