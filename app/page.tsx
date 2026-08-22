@@ -71,7 +71,7 @@ const catalog:CatalogSong[] = [
 const NOTE_NAMES=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
 const FULL_MIN_MIDI=21, FULL_MAX_MIDI=108;
 const ROLL_WINDOW=4.2,ROLL_HIT=98;
-const SAMPLE_MIDIS=[33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
+const SAMPLE_MIDIS=[21,24,27,30,33,36,39,42,45,48,51,54,57,60,63,66,69,72,75,78,81,84,87,90,93,96,99,102,105,108];
 const sampleFile=(m:number)=>`${NOTE_NAMES[m%12].replace("#","%23")}${Math.floor(m/12)-1}v6.mp3`;
 const nearestSample=(m:number)=>SAMPLE_MIDIS.reduce((best,n)=>Math.abs(n-m)<Math.abs(best-m)?n:best,SAMPLE_MIDIS[0]);
 const midiName=(m:number)=>`${NOTE_NAMES[m%12]}${Math.floor(m/12)-1}`;
@@ -211,7 +211,9 @@ export default function Home(){
   const [mobileGuideOpen,setMobileGuideOpen]=useState(false);
   const audioRef=useRef<AudioContext|null>(null);
   const sampleBytesRef=useRef(new Map<number,ArrayBuffer>());
+  const sampleByteLoadsRef=useRef(new Map<number,Promise<ArrayBuffer>>());
   const sampleBuffersRef=useRef(new Map<number,AudioBuffer>());
+  const sampleBufferLoadsRef=useRef(new Map<number,Promise<AudioBuffer>>());
   const startRef=useRef(0);
   const startTimeRef=useRef(0);
   const currentTimeRef=useRef(0);
@@ -228,9 +230,23 @@ export default function Home(){
     setGroup(next);const first=catalog.findIndex(item=>item.group===next);if(first>=0)selectSong(first);
   };
 
-  useEffect(()=>{
-    SAMPLE_MIDIS.forEach(m=>fetch(`/audio/piano/${sampleFile(m)}`).then(r=>r.arrayBuffer()).then(b=>sampleBytesRef.current.set(m,b)).catch(()=>undefined));
+  const loadSampleBytes=useCallback((midi:number)=>{
+    const cached=sampleBytesRef.current.get(midi);
+    if(cached)return Promise.resolve(cached);
+    const pending=sampleByteLoadsRef.current.get(midi);
+    if(pending)return pending;
+    const url=`/audio/piano/${sampleFile(midi)}`;
+    const request=fetch(url).then(response=>{
+      if(!response.ok)throw new Error(`钢琴采样加载失败：${url} (${response.status})`);
+      return response.arrayBuffer();
+    }).then(bytes=>{sampleBytesRef.current.set(midi,bytes);sampleByteLoadsRef.current.delete(midi);return bytes},error=>{sampleByteLoadsRef.current.delete(midi);throw error});
+    sampleByteLoadsRef.current.set(midi,request);
+    return request;
   },[]);
+
+  useEffect(()=>{
+    SAMPLE_MIDIS.forEach(midi=>{void loadSampleBytes(midi).catch(error=>console.error("[audio] 钢琴采样预加载失败",error))});
+  },[loadSampleBytes]);
 
   const playTone=useCallback(async(midi:number,duration=.45,velocity=.6,hand:"left"|"right"=midi<60?"left":"right",delay=0,scheduleVersion?:number,visualize=true)=>{
     const Ctx=window.AudioContext||(window as typeof window&{webkitAudioContext:typeof AudioContext}).webkitAudioContext;
@@ -239,9 +255,12 @@ export default function Home(){
     const sample=nearestSample(midi);
     let buffer=sampleBuffersRef.current.get(sample);
     if(!buffer){
-      const cachedBytes=sampleBytesRef.current.get(sample);
-      const bytes:ArrayBuffer=cachedBytes??await fetch(`/audio/piano/${sampleFile(sample)}`).then(r=>r.arrayBuffer());
-      buffer=await ctx.decodeAudioData(bytes.slice(0));sampleBuffersRef.current.set(sample,buffer);
+      let pending=sampleBufferLoadsRef.current.get(sample);
+      if(!pending){
+        pending=loadSampleBytes(sample).then(bytes=>ctx.decodeAudioData(bytes.slice(0))).then(decoded=>{sampleBuffersRef.current.set(sample,decoded);sampleBufferLoadsRef.current.delete(sample);return decoded},error=>{sampleBufferLoadsRef.current.delete(sample);throw error});
+        sampleBufferLoadsRef.current.set(sample,pending);
+      }
+      try{buffer=await pending}catch(error){console.error(`[audio] 无法播放 ${midiName(midi)}`,error);return}
     }
     if(scheduleVersion!==undefined&&scheduleVersion!==scheduleVersionRef.current)return;
     const source=ctx.createBufferSource(),gain=ctx.createGain(),now=ctx.currentTime,startAt=now+Math.max(0,delay),release=Math.min(4,Math.max(1.2,duration+1.8));
@@ -250,7 +269,7 @@ export default function Home(){
     source.connect(gain).connect(ctx.destination);source.start(startAt);source.stop(startAt+release+.05);
     if(scheduleVersion!==undefined){scheduledSourcesRef.current.add(source);source.onended=()=>scheduledSourcesRef.current.delete(source)}
     if(visualize){const activeKey=`${midi}-${hand}`;window.setTimeout(()=>{setActiveKeys(p=>p.includes(activeKey)?p:[...p,activeKey]);window.setTimeout(()=>setActiveKeys(p=>p.filter(key=>key!==activeKey)),Math.min(duration,1)*800)},Math.max(0,delay)*1000)}
-  },[]);
+  },[loadSampleBytes]);
 
   useEffect(()=>{
     let cancelled=false;
