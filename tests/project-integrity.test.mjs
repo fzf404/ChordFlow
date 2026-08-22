@@ -14,9 +14,10 @@ test("defines ChordFlow metadata and icons", async () => {
 
 test("ships every catalog data directory and piano-sample license", async () => {
   const page = await readFile(new URL("../app/page.tsx", import.meta.url), "utf8");
-  const popIds = [...page.matchAll(/id:"(\d{3})"[^\n]+source:"pop909"/g)].map(
-    ([, id]) => id,
+  const popSongs = [...page.matchAll(/id:"(\d{3})"[^\n]+tone:"([^"]+)"[^\n]+source:"pop909"/g)].map(
+    ([, id, tone]) => ({ id, tone }),
   );
+  const popIds = popSongs.map(({ id }) => id);
   const classicalPaths = [...page.matchAll(/midi:"(\/data\/classical\/[^"]+)"/g)].map(
     ([, path]) => path,
   );
@@ -42,9 +43,20 @@ test("ships every catalog data directory and piano-sample license", async () => 
   );
 
   await Promise.all(
-    popIds.map(async (id) => {
+    popSongs.map(async ({ id, tone }) => {
       const files = (await readdir(new URL(`${id}/`, popDirectory))).sort();
       assert.deepEqual(files, [`${id}.mid`, "chord_midi.txt", "key_audio.txt"]);
+
+      const keyAnnotations = (await readFile(new URL(`${id}/key_audio.txt`, popDirectory), "utf8"))
+        .trim()
+        .split(/\r?\n/)
+        .map((line) => {
+          const [start, end, key] = line.split(/\s+/);
+          return { duration: Number(end) - Number(start), key };
+        })
+        .sort((left, right) => right.duration - left.duration);
+      const dominantKey = keyAnnotations[0]?.key.replace(":maj", "").replace(":min", "m");
+      assert.equal(tone, dominantKey, `${id} catalog key must match its longest annotation`);
     }),
   );
 
