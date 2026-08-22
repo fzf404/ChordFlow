@@ -16,7 +16,7 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "test": "node --test tests/project-integrity.test.mjs",
+    "test": "node --experimental-strip-types --test tests/project-integrity.test.mjs",
     "lint": "eslint . --ignore-pattern .next"
   },
   "dependencies": {
