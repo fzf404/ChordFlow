@@ -19,7 +19,7 @@ const catalog:CatalogSong[] = [
   {id:"063",title:"不能说的秘密",artist:"周杰伦",tone:"G",color:"#c6a26e",group:"pop",source:"pop909"},
   {id:"292",title:"夜曲",artist:"周杰伦",tone:"Fm",color:"#809dff",group:"pop",source:"pop909"},
   {id:"702",title:"简单爱",artist:"周杰伦",tone:"C",color:"#ffd37c",group:"pop",source:"pop909"},
-  {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"E",color:"#e88ca6",group:"pop",source:"pop909"},
+  {id:"149",title:"修炼爱情",artist:"林俊杰",tone:"Eb",color:"#e88ca6",group:"pop",source:"pop909"},
   {id:"019",title:"一千年以后",artist:"林俊杰",tone:"D",color:"#93e6ff",group:"pop",source:"pop909"},
   {id:"220",title:"十年",artist:"陈奕迅",tone:"Ab",color:"#7dd4c4",group:"pop",source:"pop909"},
   {id:"609",title:"爱情转移",artist:"陈奕迅",tone:"F",color:"#ef9fb4",group:"pop",source:"pop909"},
@@ -89,8 +89,9 @@ const displayRange=(notes:PianoNote[],group:Group):[number,number]=>{
 };
 const fmt=(seconds:number)=>`${Math.floor(seconds/60)}:${Math.floor(seconds%60).toString().padStart(2,"0")}`;
 const keyLabel=(raw:string)=>raw.replace(":maj","").replace(":min","m");
-const tempoLabel=(data:SongData)=>`${Math.round(data.bpm)} BPM${data.tempoMax-data.tempoMin>=6?" · 变速":""}`;
-const tempoDetail=(data:SongData)=>data.tempoMax-data.tempoMin>=2?`${Math.round(data.tempoMin)}–${Math.round(data.tempoMax)} BPM`:`${Math.round(data.bpm)} BPM`;
+const formatBpm=(bpm:number)=>Math.abs(bpm-Math.round(bpm))<.05?String(Math.round(bpm)):bpm.toFixed(1);
+const tempoLabel=(data:SongData)=>`${formatBpm(data.bpm)} BPM${data.tempoMax-data.tempoMin>=6?" · 变速":""}`;
+const tempoDetail=(data:SongData)=>data.tempoMax-data.tempoMin>=2?`${formatBpm(data.tempoMin)}–${formatBpm(data.tempoMax)} BPM`:`${formatBpm(data.bpm)} BPM`;
 const notesBetween=(notes:PianoNote[],start:number,end:number,limit:number)=>{let low=0,high=notes.length;while(low<high){const mid=(low+high)>>1;if(notes[mid].time<start)low=mid+1;else high=mid}const result:PianoNote[]=[];for(let i=low;i<notes.length&&notes[i].time<=end&&result.length<limit;i++)result.push(notes[i]);return result};
 const notesInRoll=(notes:PianoNote[],time:number,limit:number)=>notesBetween(notes,time-12,time+ROLL_WINDOW,notes.length).filter(note=>note.time+note.duration>=time-.12).slice(0,limit);
 const pitchNames=["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"];
@@ -391,7 +392,7 @@ export default function Home(){
                 {song.group==="beginner"&&beginnerGuide&&<div className="course-guide"><span className="guide-label">本课目标</span><h3>{beginnerGuide.goal}</h3><ol>{beginnerGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol><div className="hand-key"><span><i className="lh"/>左手低音</span><span><i className="rh"/>右手高音</span></div></div>}
                 {song.group==="classical"&&classicalGuide&&<div className="course-guide classical-guide"><div className="piece-meta"><span><small>难度</small><b>{classicalGuide.level}</b></span><span><small>练习重点</small><b>{classicalGuide.focus}</b></span></div><ol>{classicalGuide.steps.map((step,index)=><li key={step}><b>{index+1}</b><span>{step}</span></li>)}</ol></div>}
                 {song.group==="pop"&&<><div className="track-switches"><button className={`lyrics-switch ${lyricsEnabled?"on":""}`} aria-pressed={lyricsEnabled} onClick={()=>setLyricsEnabled(v=>!v)}><span><i/>歌词</span><b>{lyricsEnabled?"已开启":"已关闭"}</b></button><button className={`melody-switch ${melodyEnabled?"on":""}`} aria-pressed={melodyEnabled} onClick={()=>{setPlaying(false);setMelodyEnabled(v=>!v)}}><span><i/>旋律</span><b>{melodyEnabled?"已开启":"已关闭"}</b></button></div><div className="howto"><span>1</span><p><strong>点击播放</strong>音符从上方向琴键移动</p></div><div className="howto"><span>2</span><p><strong>按颜色分手</strong><i className="lh"/>低音区左手 <i className="rh"/>高音区右手</p></div><div className="howto"><span>3</span><p><strong>到达线时弹下</strong>键盘会同步高亮</p></div>{melodyEnabled&&<div className="melody-status"><i/><span><strong>旋律轨正在播放</strong><small>紫色音符会落到对应琴键</small></span></div>}{lyricsEnabled&&<div className="lyrics-box">{currentLyric?<><small>当前歌词</small><strong>{currentLyric.text}</strong></>:lyrics.length?<><small>歌词轨已就绪</small><strong>等待第一句歌词</strong></>:<><small>歌词轨已开启</small><strong>导入 LRC 后随播放显示</strong></>}{lyricsError&&<p role="alert">{lyricsError}</p>}<label>＋ 导入 LRC<input key={song.id} type="file" accept=".lrc" onChange={e=>importLrc(e.target.files?.[0])}/></label></div>}</>}
-              </>:<div className="data-panel"><dl><div><dt>调性</dt><dd>{data?.key??song.tone}</dd></div><div><dt>速度</dt><dd>{data?tempoDetail(data):"--"}</dd></div><div><dt>时长</dt><dd>{data?fmt(data.duration):"--:--"}</dd></div><div><dt>显示音域</dt><dd>{data?`${midiName(data.displayMin)}–${midiName(data.displayMax)}`:"--"}</dd></div><div><dt>有效音轨</dt><dd>{data?.tracks??0}</dd></div><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>{song.source==="midi"?"按原始音轨":"C4 分区"}</dd></div></dl><p>速度采用 MIDI 速度段的加权中位值，范围忽略极短的瞬时变化；键盘覆盖当前曲目的完整实际音域。</p></div>}
+              </>:<div className="data-panel"><dl><div><dt>调性</dt><dd>{data?.key??song.tone}</dd></div><div><dt>速度</dt><dd>{data?tempoDetail(data):"--"}</dd></div><div><dt>时长</dt><dd>{data?fmt(data.duration):"--:--"}</dd></div><div><dt>显示音域</dt><dd>{data?`${midiName(data.displayMin)}–${midiName(data.displayMax)}`:"--"}</dd></div><div><dt>有效音轨</dt><dd>{data?.tracks??0}</dd></div><div><dt>钢琴音符</dt><dd>{data?.notes.length??0}</dd></div><div><dt>旋律音符</dt><dd>{data?.melody.length??0}</dd></div><div><dt>和弦标记</dt><dd>{data?.chords.length??0}</dd></div><div><dt>左右手规则</dt><dd>{song.source==="midi"?"按声部音区":"C4 分区"}</dd></div></dl><p>速度采用 MIDI 速度段的加权中位值，范围忽略极短的瞬时变化；键盘覆盖当前曲目的完整实际音域。</p></div>}
             </aside>
 
             <div className="performance">
