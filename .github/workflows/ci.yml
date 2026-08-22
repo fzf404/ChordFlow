@@ -32,8 +32,8 @@ jobs:
       - name: Lint
         run: pnpm lint
 
-      - name: Test Cloudflare build
+      - name: Test
         run: pnpm test
 
-      - name: Test Vercel build
-        run: pnpm build:vercel
+      - name: Build
+        run: pnpm build

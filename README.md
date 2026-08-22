@@ -17,10 +17,7 @@ ChordFlow 是一个开源的可视化钢琴学习与和弦练习应用。它将 
 ## 技术栈
 
 - Next.js 16 / React 19 / TypeScript
-- vinext / Vite / Cloudflare Workers
 - Tone.js MIDI
-- Tailwind CSS 4
-- 可选的 Cloudflare D1 / Drizzle 扩展骨架
 
 ## 本地开发
 
@@ -39,10 +36,10 @@ pnpm dev
 ```bash
 pnpm lint
 pnpm test
-pnpm build:vercel
+pnpm build
 ```
 
-`pnpm test` 会先执行 vinext/Cloudflare 生产构建，再验证服务端渲染与曲库文件完整性。`pnpm build:vercel` 单独验证标准 Next.js/Vercel 构建。
+`pnpm test` 验证页面元数据与曲库文件完整性，`pnpm build` 验证生产构建。
 
 ## 部署
 
@@ -50,28 +47,12 @@ pnpm build:vercel
 
 导入此 GitHub 仓库即可。`vercel.json` 会使用 Next.js 构建。
 
-### Cloudflare Workers
-
-vinext 通过 `vite.config.ts` 和 `worker/index.ts` 生成 Worker 产物：
-
-```bash
-pnpm build
-pnpm start
-```
-
-### OpenAI Sites
-
-`.openai/hosting.json` 声明 Sites 项目和可选绑定，`build/sites-vite-plugin.ts` 在构建时打包相关元数据。当前应用不依赖 D1 或 R2；`db/` 与 `examples/d1/` 仅作为可选扩展入口。
-
 ## 项目结构
 
 ```text
 app/                  页面、交互与样式
 public/audio/piano/   钢琴采样与其许可证
 public/data/          POP909 子集与古典 MIDI
-worker/               Cloudflare Worker 入口
-db/                   可选 D1/Drizzle 扩展
-examples/d1/          D1 使用示例
 tests/                构建与资源完整性测试
 ```
 
@@ -83,4 +64,4 @@ tests/                构建与资源完整性测试
 
 ## 贡献
 
-欢迎 Issue 和 Pull Request。提交前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 并确保 lint、测试和两种构建均通过。
+欢迎 Issue 和 Pull Request。提交前请阅读 [CONTRIBUTING.md](CONTRIBUTING.md) 并确保 lint、测试和生产构建均通过。
