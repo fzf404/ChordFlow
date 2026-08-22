@@ -12,7 +12,7 @@
    ```bash
    pnpm lint
    pnpm test
-   pnpm build:vercel
+   pnpm build
    ```
 
 5. 在 Pull Request 中说明问题、解决方案和验证结果。
